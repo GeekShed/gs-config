@@ -1,0 +1,8 @@
+Auto-Config: 
+	* generate olines.conf
+	* add hub region support to links.conf (ie, server region 0 is root, they all connect to the server using the H:line	
+Auto-Build:
+	* everything... I'll fill this out soon
+
+Auto-Push:
+	* everything, I'll fill this out soon
