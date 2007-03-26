@@ -1,8 +1,12 @@
 Auto-Config: 
+	{ Helio @ 3/26/06 }:
 	* generate olines.conf
 	* add hub region support to links.conf (ie, server region 0 is root, they all connect to the server using the H:line	
+	* build other config files automatically (low priority, as the global config files are normally uniform)
 Auto-Build:
+	{ Helio @ 3/26/06 }:
 	* everything... I'll fill this out soon
 
 Auto-Push:
+	{ Helio @ 3/26/06 }:
 	* everything, I'll fill this out soon
