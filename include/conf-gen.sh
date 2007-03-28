@@ -24,11 +24,11 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-NAME=./network.conf
 OUTPUTPATH=/tmp/cf-gen
 rm -rf /tmp/cf-gen
 mkdir -p /tmp/cf-gen
 chmod 750 /tmp/cf-gen
+NAME=${CONFIG}
 
 # stripping out comments and whitespace:
 grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
