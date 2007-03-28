@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2005-2007  WyldRyde Corporation
+# Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
 #	$Id$
