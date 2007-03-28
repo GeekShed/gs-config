@@ -3,6 +3,8 @@
 # Copyright (c) 2005-2007  WyldRyde Corporation
 # All rights reserved.
 #
+#	$Id$
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
@@ -39,6 +41,7 @@ NETWORK=area51
 for WORKINGSERVER in `grep ^S ${STRIPCONF}`
 do
 	SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :`
+	REGION=`echo ${WORKINGSERVER} | cut -f 2 -d :`
 	CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME}
 	PORTSFILE=${CONFPATH}/ports.conf
 	LINKFILE=${CONFPATH}/links.conf
@@ -47,6 +50,7 @@ do
 	mkdir ${CONFPATH}
 	BINDIP=`echo ${WORKINGSERVER} | cut -f 3 -d : | cut -f 1 -d -`
 	echo "\t- starting ${LINKFILE}"
+	
 	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
