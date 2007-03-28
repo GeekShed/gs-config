@@ -41,7 +41,7 @@ NETWORK=area51
 for WORKINGSERVER in `grep ^S ${STRIPCONF}`
 do
 	SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :`
-	REGION=`echo ${WORKINGSERVER} | cut -f 2 -d :`
+	REGION=`echo ${WORKINGSERVER} | cut -f 9 -d :`
 	CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME}
 	PORTSFILE=${CONFPATH}/ports.conf
 	LINKFILE=${CONFPATH}/links.conf
@@ -65,6 +65,18 @@ do
 		echo "\tpassword-recieve \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
 		echo "\tclass leaf;" >> ${LINKFILE}
 		echo "\toptions {" >> ${LINKFILE}
+		if [ "${REGION}" != "0" ] ; then
+			if [ "${REGION}" != "" ] ; then
+				for HLINES in `grep ^H ${STRIPCONF}`
+				do
+					if [ "`echo ${HLINES} | cut -f 2 -d :`" == ${REGION} ] ; then
+						if [ "`echo ${HLINES} | cut -f 3 -d :`" == ${LINKNAME} ] ; then
+							echo "\t\tautoconnect;" >> ${LINKFILE}
+						fi
+					fi 
+				done
+			fi
+		fi
 		echo "\t};" >> ${LINKFILE}
 		echo "};\n" >> ${LINKFILE}
 	done
