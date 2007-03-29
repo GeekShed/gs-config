@@ -30,7 +30,7 @@ do
 	. include/${script}
 done
 
-main() {
+main () {
 	# set var's to use
 	SCRIPTROOT=`pwd`
 	CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
