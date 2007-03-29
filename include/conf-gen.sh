@@ -25,19 +25,8 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
-
-OUTPUTPATH=/tmp/cf-gen
-rm -rf /tmp/cf-gen
-mkdir -p /tmp/cf-gen
-chmod 750 /tmp/cf-gen
-NAME=${CONFIG}
-
-# stripping out comments and whitespace:
-grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
-STRIPCONF=${OUTPUTPATH}/network.conf
-mkdir -p ${OUTPUTPATH}/conf
-NETWORK=area51
-
+conf-gen()
+{
 for WORKINGSERVER in `grep ^S ${STRIPCONF}`
 do
 	SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :`
@@ -113,3 +102,4 @@ do
 	echo "\t- ending ${SERVERFILE}"
 
 done
+}

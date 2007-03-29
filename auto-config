@@ -25,17 +25,31 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# set var's to use
-SCRIPTROOT=`pwd`
-CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
-SHELL=/bin/sh ; export SHELL
-
-# run through scripts
-${SHELL} ./include/conf-gen.sh
+. include/*
 
 parseargs() {
 	for args in $0
 		do
-			
+			case ${args} in
+				links) ${SHELL} ./include/links-gen.sh ;;
+			esac	
 		done
 }
+
+# set var's to use
+SCRIPTROOT=`pwd`
+CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
+SHELL=/bin/sh ; export SHELL
+OUTPUTPATH=/tmp/cf-gen ; export OUTPUTPATH
+rm -rf /tmp/cf-gen 
+mkdir -p /tmp/cf-gen
+chmod 750 /tmp/cf-gen
+NAME=${CONFIG} ; export NAME
+
+# stripping out comments and whitespace:
+grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
+STRIPCONF=${OUTPUTPATH}/network.conf ; export STRIPCONF
+mkdir -p ${OUTPUTPATH}/conf
+NETWORK=area51 ; export NETWORK
+
+# run through scripts

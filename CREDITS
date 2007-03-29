@@ -10,7 +10,8 @@ Helio:
 ----------------------------------------------------
 auto-config
 nocodeschmode.c
-
+include/link-gen.sh
+include/conf-gen.sh
 
 
 Phil:
