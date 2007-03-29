@@ -30,30 +30,30 @@ links_gen ()
 		LINKFILE=${CONFPATH}/links.conf
                 LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
                 LINKIP=`echo ${REMOTESERVER} | cut -f 3 -d : | cut -f 1 -d -`
-                echo "\nlink ${LINKNAME}.${NETWORK} {" >> ${LINKFILE}
-                echo "\tusername *;" >> ${LINKFILE}
-                echo "\thostname ${LINKIP};" >> ${LINKFILE}
-                echo "\tbind-ip ${BINDIP};" >> ${LINKFILE}
-                echo "\tport 4400;" >> ${LINKFILE}
-                echo "\thub *;" >> ${LINKFILE}
-                echo "\tpassword-connect \"wyldryde-l33t-link-password\";" >> ${LINKFILE}
-                echo "\tpassword-recieve \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
-                echo "\tclass leaf;" >> ${LINKFILE}
-                echo "\toptions {" >> ${LINKFILE}
+                echo "link ${LINKNAME}.${NETWORK} {" >> ${LINKFILE}
+                echo "username *;" >> ${LINKFILE}
+                echo "hostname ${LINKIP};" >> ${LINKFILE}
+                echo "bind-ip ${BINDIP};" >> ${LINKFILE}
+                echo "port 4400;" >> ${LINKFILE}
+                echo "hub *;" >> ${LINKFILE}
+                echo "password-connect \"wyldryde-l33t-link-password\";" >> ${LINKFILE}
+                echo "password-recieve \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
+                echo "class leaf;" >> ${LINKFILE}
+                echo "options {" >> ${LINKFILE}
                 if [ "${REGION}" != "0" ] ; then
                         if [ "${REGION}" != "" ] ; then
                                 for HLINES in `grep ^H ${STRIPCONF}`
                                 do
                                         if [ "`echo ${HLINES} | cut -f 2 -d :`" == ${REGION} ] ; then
                                                 if [ "`echo ${HLINES} | cut -f 3 -d :`" == ${LINKNAME} ] ; then
-                                                        echo "\t\tautoconnect;" >> ${LINKFILE}
+                                                        echo "autoconnect;" >> ${LINKFILE}
                                                 fi
                                         fi
                                 done
                         fi
                 fi
-                echo "\t};" >> ${LINKFILE}
-                echo "};\n" >> ${LINKFILE}
+                echo "};" >> ${LINKFILE}
+                echo "};" >> ${LINKFILE}
         done  
 
 }
