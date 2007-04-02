@@ -25,9 +25,9 @@
 # SUCH DAMAGE
 links_gen ()
 {
+	LINKFILE=${CONFPATH}/links.conf
         for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
         do
-		LINKFILE=${CONFPATH}/links.conf
                 LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
                 LINKIP=`echo ${REMOTESERVER} | cut -f 3 -d : | cut -f 1 -d -`
                 echo "link ${LINKNAME}.${NETWORK} {" >> ${LINKFILE}
@@ -51,9 +51,17 @@ links_gen ()
                                         fi
                                 done
                         fi
+		else
+			echo "autoconnect;"
                 fi
                 echo "};" >> ${LINKFILE}
                 echo "};" >> ${LINKFILE}
         done  
 
+}
+
+hub-parse ()
+{
+	#hub map parser
+	for HLINES in `grep ${STRIPCONF}`
 }
