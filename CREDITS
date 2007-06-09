@@ -22,7 +22,7 @@ Phil:
 
 SC_Thor:
 ----------------------------------------------------
-include/conf.sh - ipv6 listen support
+include/ports.sh - ipv6 listen support
 include/oper.sh - write oper blocks based on U:lines
 
 

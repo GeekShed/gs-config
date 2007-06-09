@@ -1,8 +1,9 @@
 #!/bin/sh
+#
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
-# $Id$
+#	$Id$
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,48 +25,30 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
-
-for script in include/*
-do
-	. ${script}
-done
-
-main () {
-	# set var's to use
-	SCRIPTROOT=`pwd`
-	CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
-	SHELL=/bin/sh ; export SHELL
-	OUTPUTPATH=/tmp/cf-gen ; export OUTPUTPATH
-	rm -rf ${OUTPUTPATH}
-	mkdir -p ${OUTPUTPATH}
-	chmod 750 ${OUTPUTPATH}
-	NAME=${CONFIG} ; export NAME
-
-	# stripping out comments and whitespace:
-	grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
-	STRIPCONF=${OUTPUTPATH}/network.conf ; export STRIPCONF
-	mkdir -p ${OUTPUTPATH}/conf
-	NETWORK=WyldRyde.org ; export NETWORK
-
-	# run through scripts
-	for WORKINGSERVER in `grep ^S ${STRIPCONF}`
+ports_gen ()
+{
+	echo "        - starting ${PORTSFILE}"
+	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
-		export WORKINGSERVER
-		SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :` ; export SERVERNAME
-		REGION=`echo ${WORKINGSERVER} | cut -f 9 -d :` ; export REGION
-		CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME} ; export CONFPATH
-		mkdir ${CONFPATH}
-		for args in $*
+		for PORTS in `grep ^P ${STRIPCONF}`
 		do
-				case ${args} in
-					server) server_gen ;;
-					links) links_gen ;;
-					ports) ports_gen ;;
-					opers) opers_gen ;;
-				esac
+			PORT=`echo ${PORTS} | cut -f 2 -d :`
+			OPTIONS=`echo ${PORTS} | cut -f 3 -d :`
+			if [ `echo "${LISTENIP}"| grep -c ^\\\[` = "0" ] ; then
+				echo "listen [::ffff:${LISTENIP}]:${PORT} {" >> ${PORTSFILE}
+			else
+				echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+			fi
+			if [ "${OPTIONS}" != "" ] ; then
+				echo "        options {" >> ${PORTSFILE}
+				case ${OPTIONS} in *c*) echo "                clients-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *s*) echo "                servers-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *l*) echo "                ssl;" >> ${PORTSFILE} ;;		esac
+				echo "        };" >> ${PORTSFILE}
+			fi
+			echo "};" >> ${PORTSFILE}
 		done
 	done
+	echo "        - ending ${PORTSFILE}"
+done
 }
-
-
-main $*
