@@ -71,13 +71,17 @@ do
 	done
 	echo "\t- ending ${LINKFILE}"
 	echo "\t- starting ${PORTSFILE}"
-	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g`
+	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
 		for PORTS in `grep ^P ${STRIPCONF}`
 		do
 			PORT=`echo ${PORTS} | cut -f 2 -d :`
 			OPTIONS=`echo ${PORTS} | cut -f 3 -d :`
-			echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+			if [ `grep -c ^\[ "${LISTENIP}"` == 0 ] ; then
+				echo "listen [::ffff:${LISTENIP}]:${PORT} {" >> ${PORTSFILE}
+			else
+				echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+			fi
 			if [ "${OPTIONS}" != "" ] ; then
 				echo "\toptions {" >> ${PORTSFILE}
 				case ${OPTIONS} in *c*) echo "\t\tclients-only;" >> ${PORTSFILE} ;;	esac
