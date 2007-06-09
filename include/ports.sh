@@ -50,5 +50,4 @@ ports_gen ()
 		done
 	done
 	echo "        - ending ${PORTSFILE}"
-done
 }
