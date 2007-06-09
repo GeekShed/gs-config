@@ -22,9 +22,12 @@ Phil:
 
 SC_Thor:
 ----------------------------------------------------
+conf/example.conf - support for oper hosts
+conf/example.conf - new region handeling
+conf/example.conf - more server flags (ssl, zip, autoconnect)
 include/ports.sh - ipv6 listen support
 include/oper.sh - write oper blocks based on U:lines
-
+include/links.sh - proper hub handeling based on helio's region system
 
 usrbingeek:
 ----------------------------------------------------
