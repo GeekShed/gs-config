@@ -1,4 +1,3 @@
-#!/bin/sh
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
@@ -25,61 +24,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-WORKDIR=`pwd`
-COMMAND=`basename $0`
 
-check_config() {
-	if [ "${1}" = "" ] ; then
-		# using conf/network.conf to write to
-		CONFFILE="${WORKDIR}/conf/network.conf"
-	else
-		CONFFILE="${WORKDIR}/conf/${1}"
-		if [ ! -e ${CONFFILE} ] ; then
-			echo "ERROR: ${WORKDIR}/conf/${1} doesn't exist, aborting"
-			exit
-		fi
-	fi
-	echo ${CONFFILE}
-}
-
-add_server() {
-	check_config $1
-}
-
-create_config() {
-	if [ "${1}" = "" ] ; then
-		if [ "${CONFFILE}" = "" ] ; then
-			echo "ERROR: must specify a config file!"
-			exit
-		fi
-	else
-		CONFFILE="${WORKDIR}/conf/${1}"
-		if [ -e ${CONFFILE} ] ; then
-			echo "ERROR: config file already exists!"
-			exit
-		fi
-	fi
-
-	
-}
-
-usage() {
-	echo "usage:"
-	echo -e "\t${COMMAND} create"
-	echo -e "\t${COMMAND} add"
-}
-
-case "${1}" in
-	[pP][uU][sS][hH]) 
-		
-	;;
-	[aA][dD][dD])
-		add_server $2
-	;;
-	[cC][rR][eE][aA][tT][eE])
-		create_config $2
-	;;
-	*)
-		usage
-	;;
-esac
+auto-install:
+	requires openssh
+	requires subversion

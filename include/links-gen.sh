@@ -52,7 +52,7 @@ links_gen ()
                                 done
                         fi
 		else
-			echo "autoconnect;"
+			echo "autoconnect;" >> ${LINKFILE}
                 fi
                 echo "};" >> ${LINKFILE}
                 echo "};" >> ${LINKFILE}
@@ -60,8 +60,3 @@ links_gen ()
 
 }
 
-hub-parse ()
-{
-	#hub map parser
-	for HLINES in `grep ${STRIPCONF}`
-}

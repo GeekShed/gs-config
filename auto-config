@@ -27,7 +27,7 @@
 
 for script in include/*
 do
-	. include/${script}
+	. ${script}
 done
 
 main () {
@@ -58,6 +58,7 @@ main () {
 		for args in $*
 		do
 				case ${args} in
+					server) server_gen ;;
 					links) links_gen ;;
 				esac
 		done
