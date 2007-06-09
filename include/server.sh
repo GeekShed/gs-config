@@ -1,4 +1,3 @@
-#!/bin/sh
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
@@ -23,47 +22,23 @@
 # HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-# SUCH DAMAGE.
-
-for script in include/*
-do
-	. ${script}
-done
-
-main () {
-	# set var's to use
-	SCRIPTROOT=`pwd`
-	CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
-	SHELL=/bin/sh ; export SHELL
-	OUTPUTPATH=/tmp/cf-gen ; export OUTPUTPATH
-	rm -rf ${OUTPUTPATH}
-	mkdir -p ${OUTPUTPATH}
-	chmod 750 ${OUTPUTPATH}
-	NAME=${CONFIG} ; export NAME
-
-	# stripping out comments and whitespace:
-	grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
-	STRIPCONF=${OUTPUTPATH}/network.conf ; export STRIPCONF
-	mkdir -p ${OUTPUTPATH}/conf
-	NETWORK=WyldRyde.org ; export NETWORK
-
-	# run through scripts
-	for WORKINGSERVER in `grep ^S ${STRIPCONF}`
-	do
-		export WORKINGSERVER
-		SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :` ; export SERVERNAME
-		REGION=`echo ${WORKINGSERVER} | cut -f 9 -d :` ; export REGION
-		CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME} ; export CONFPATH
-		mkdir ${CONFPATH}
-		for args in $*
-		do
-				case ${args} in
-					server) server_gen ;;
-					links) links_gen ;;
-				esac
-		done
-	done
+# SUCH DAMAGE
+server_gen ()
+{
+	SERVERFILE=${CONFPATH}/server.conf
+	SLINE=`grep ^S ${STRIPCONF} | grep ${SERVERNAME}`
+	NAME=${SERVERNAME}.${NETWORK}
+	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
+	PASS=`echo ${SLINE} | cut -d : -f 7`
+	INFO=`cat ${SCRIPTROOT}/conf/wyldryde/${SERVERNAME}/info`
+	echo "me {" >>${SERVERFILE}
+	echo "name \"${NAME}\";" >>${SERVERFILE}
+	echo "info \"${INFO}\";" >>${SERVERFILE}
+	echo "numeric ${NUMERIC};" >>${SERVERFILE}
+	echo "};" >>${SERVERFILE}
+	echo "drpass {" >>${SERVERFILE}
+	echo "restart \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "die \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "};" >>${SERVERFILE}
 }
 
-
-main $*
