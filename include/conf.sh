@@ -77,7 +77,7 @@ do
 		do
 			PORT=`echo ${PORTS} | cut -f 2 -d :`
 			OPTIONS=`echo ${PORTS} | cut -f 3 -d :`
-			if [ `grep -c ^\[ "${LISTENIP}"` == 0 ] ; then
+			if [ `echo "${LISTENIP}"| grep -c ^\\\[` = "0" ] ; then
 				echo "listen [::ffff:${LISTENIP}]:${PORT} {" >> ${PORTSFILE}
 			else
 				echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
