@@ -26,21 +26,21 @@
 server_gen ()
 {
 	SERVERFILE=${CONFPATH}/server.conf
-	echo "        - starting ${SERVERFILE}"
+	echo "\t- starting ${SERVERFILE}"
 	SLINE=`grep ^S ${STRIPCONF} | grep ${SERVERNAME}`
 	NAME=${SERVERNAME}.${NETWORK}
 	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
 	PASS=`echo ${SLINE} | cut -d : -f 7`
 	INFO=`cat ${SCRIPTROOT}/conf/wyldryde/${SERVERNAME}/info`
 	echo "me {" >>${SERVERFILE}
-	echo "        name \"${NAME}\";" >>${SERVERFILE}
-	echo "        info \"${INFO}\";" >>${SERVERFILE}
-	echo "        numeric ${NUMERIC};" >>${SERVERFILE}
+	echo "\tname \"${NAME}\";" >>${SERVERFILE}
+	echo "\tinfo \"${INFO}\";" >>${SERVERFILE}
+	echo "\tnumeric ${NUMERIC};" >>${SERVERFILE}
 	echo "};" >>${SERVERFILE}
 	echo "drpass {" >>${SERVERFILE}
-	echo "        restart \"${PASS}\" { sha1; };" >>${SERVERFILE}
-	echo "        die \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "\trestart \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "\tdie \"${PASS}\" { sha1; };" >>${SERVERFILE}
 	echo "};" >>${SERVERFILE}
-	echo "        - ending ${SERVERFILE}"
+	echo "\t- ending ${SERVERFILE}"
 }
 

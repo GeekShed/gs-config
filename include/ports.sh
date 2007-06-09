@@ -28,7 +28,7 @@
 ports_gen ()
 {
 	PORTSFILE=${CONFPATH}/ports.conf
-	echo "        - starting ${PORTSFILE}"
+	echo "\t- starting ${PORTSFILE}"
 	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
 		for PORTS in `grep ^P ${STRIPCONF}`
@@ -41,14 +41,14 @@ ports_gen ()
 				echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 			fi
 			if [ "${OPTIONS}" != "" ] ; then
-				echo "        options {" >> ${PORTSFILE}
-				case ${OPTIONS} in *c*) echo "                clients-only;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *s*) echo "                servers-only;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *l*) echo "                ssl;" >> ${PORTSFILE} ;;		esac
-				echo "        };" >> ${PORTSFILE}
+				echo "\toptions {" >> ${PORTSFILE}
+				case ${OPTIONS} in *c*) echo "\t\tclients-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *s*) echo "\t\tservers-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *l*) echo "\t\tssl;" >> ${PORTSFILE} ;;		esac
+				echo "\t};" >> ${PORTSFILE}
 			fi
 			echo "};" >> ${PORTSFILE}
 		done
 	done
-	echo "        - ending ${PORTSFILE}"
+	echo "\t- ending ${PORTSFILE}"
 }
