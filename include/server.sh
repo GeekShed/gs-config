@@ -32,13 +32,13 @@ server_gen ()
 	PASS=`echo ${SLINE} | cut -d : -f 7`
 	INFO=`cat ${SCRIPTROOT}/conf/wyldryde/${SERVERNAME}/info`
 	echo "me {" >>${SERVERFILE}
-	echo "name \"${NAME}\";" >>${SERVERFILE}
-	echo "info \"${INFO}\";" >>${SERVERFILE}
-	echo "numeric ${NUMERIC};" >>${SERVERFILE}
+	echo "        name \"${NAME}\";" >>${SERVERFILE}
+	echo "        info \"${INFO}\";" >>${SERVERFILE}
+	echo "        numeric ${NUMERIC};" >>${SERVERFILE}
 	echo "};" >>${SERVERFILE}
 	echo "drpass {" >>${SERVERFILE}
-	echo "restart \"${PASS}\" { sha1; };" >>${SERVERFILE}
-	echo "die \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "        restart \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "        die \"${PASS}\" { sha1; };" >>${SERVERFILE}
 	echo "};" >>${SERVERFILE}
 }
 

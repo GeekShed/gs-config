@@ -39,39 +39,39 @@ do
 	echo "Generating config files for ${SERVERNAME}.${NETWORK}"
 	mkdir ${CONFPATH}
 	BINDIP=`echo ${WORKINGSERVER} | cut -f 3 -d : | cut -f 1 -d -`
-	echo "\t- starting ${LINKFILE}"
+	echo "        - starting ${LINKFILE}"
 	
 	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
 		LINKIP=`echo ${REMOTESERVER} | cut -f 3 -d : | cut -f 1 -d -`
 		echo "\nlink ${LINKNAME}.${NETWORK} {" >> ${LINKFILE}
-		echo "\tusername *;" >> ${LINKFILE}
-		echo "\thostname ${LINKIP};" >> ${LINKFILE}
-		echo "\tbind-ip ${BINDIP};" >> ${LINKFILE}
-		echo "\tport 4400;" >> ${LINKFILE}
-		echo "\thub *;" >> ${LINKFILE}
-		echo "\tpassword-connect \"wyldryde-l33t-link-password\";" >> ${LINKFILE}
-		echo "\tpassword-recieve \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
-		echo "\tclass leaf;" >> ${LINKFILE}
-		echo "\toptions {" >> ${LINKFILE}
+		echo "        username *;" >> ${LINKFILE}
+		echo "        hostname ${LINKIP};" >> ${LINKFILE}
+		echo "        bind-ip ${BINDIP};" >> ${LINKFILE}
+		echo "        port 4400;" >> ${LINKFILE}
+		echo "        hub *;" >> ${LINKFILE}
+		echo "        password-connect \"wyldryde-l33t-link-password\";" >> ${LINKFILE}
+		echo "        password-recieve \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
+		echo "        class leaf;" >> ${LINKFILE}
+		echo "        options {" >> ${LINKFILE}
 		if [ "${REGION}" != "0" ] ; then
 			if [ "${REGION}" != "" ] ; then
 				for HLINES in `grep ^H ${STRIPCONF}`
 				do
 					if [ "`echo ${HLINES} | cut -f 2 -d :`" == ${REGION} ] ; then
 						if [ "`echo ${HLINES} | cut -f 3 -d :`" == ${LINKNAME} ] ; then
-							echo "\t\tautoconnect;" >> ${LINKFILE}
+							echo "                autoconnect;" >> ${LINKFILE}
 						fi
 					fi 
 				done
 			fi
 		fi
-		echo "\t};" >> ${LINKFILE}
+		echo "        };" >> ${LINKFILE}
 		echo "};\n" >> ${LINKFILE}
 	done
-	echo "\t- ending ${LINKFILE}"
-	echo "\t- starting ${PORTSFILE}"
+	echo "        - ending ${LINKFILE}"
+	echo "        - starting ${PORTSFILE}"
 	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
 		for PORTS in `grep ^P ${STRIPCONF}`
@@ -84,27 +84,27 @@ do
 				echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 			fi
 			if [ "${OPTIONS}" != "" ] ; then
-				echo "\toptions {" >> ${PORTSFILE}
-				case ${OPTIONS} in *c*) echo "\t\tclients-only;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *s*) echo "\t\tservers-only;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *l*) echo "\t\tssl;" >> ${PORTSFILE} ;;		esac
-				echo "\t};" >> ${PORTSFILE}
+				echo "        options {" >> ${PORTSFILE}
+				case ${OPTIONS} in *c*) echo "                clients-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *s*) echo "                servers-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *l*) echo "                ssl;" >> ${PORTSFILE} ;;		esac
+				echo "        };" >> ${PORTSFILE}
 			fi
 			echo "};" >> ${PORTSFILE}
 		done
 	done
-	echo "\t- ending ${PORTSFILE}"
-	echo "\t- starting ${SERVERFILE}"
+	echo "        - ending ${PORTSFILE}"
+	echo "        - starting ${SERVERFILE}"
 		echo "me {" >> ${SERVERFILE}
-		echo "\tname \"${SERVERNAME}.${NETWORK}\";" >> ${SERVERFILE}
-		echo "\tinfo \"`echo ${WORKINGSERVER} | cut -f 6 -d :`\";" >> ${SERVERFILE}
-		echo "\tnumeric `echo ${WORKINGSERVER} | cut -f 7 -d :`" >> ${SERVERFILE}
+		echo "        name \"${SERVERNAME}.${NETWORK}\";" >> ${SERVERFILE}
+		echo "        info \"`echo ${WORKINGSERVER} | cut -f 6 -d :`\";" >> ${SERVERFILE}
+		echo "        numeric `echo ${WORKINGSERVER} | cut -f 7 -d :`" >> ${SERVERFILE}
 		echo "};" >> ${SERVERFILE}
 		echo "drpass {" >> ${SERVERFILE}
-		echo "\trestart \"`echo ${WORKINGSERVER} | cut -f 8 -d :`\" { sha1; };" >> ${SERVERFILE}
-		echo "\tdie \"`echo ${WORKINGSERVER} | cut -f 8 -d :`\" { sha1; };" >> ${SERVERFILE}
+		echo "        restart \"`echo ${WORKINGSERVER} | cut -f 8 -d :`\" { sha1; };" >> ${SERVERFILE}
+		echo "        die \"`echo ${WORKINGSERVER} | cut -f 8 -d :`\" { sha1; };" >> ${SERVERFILE}
 		echo "};" >> ${SERVERFILE}
-	echo "\t- ending ${SERVERFILE}"
+	echo "        - ending ${SERVERFILE}"
 
 done
 }
