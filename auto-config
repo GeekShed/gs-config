@@ -60,6 +60,7 @@ main () {
 				case ${args} in
 					server) server_gen ;;
 					links) links_gen ;;
+					opers) opers_gen ;;
 				esac
 		done
 	done

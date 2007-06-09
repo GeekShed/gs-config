@@ -33,6 +33,7 @@ do
 	REGION=`echo ${WORKINGSERVER} | cut -f 9 -d :`
 	CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME}
 	PORTSFILE=${CONFPATH}/ports.conf
+	OPERFILE=${CONFPATH}/olines.conf
 	LINKFILE=${CONFPATH}/links.conf
 	SERVERFILE=${CONFPATH}/server.conf
 	echo "Generating config files for ${SERVERNAME}.${NETWORK}"
