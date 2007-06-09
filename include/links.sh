@@ -26,6 +26,7 @@
 links_gen ()
 {
 	LINKFILE=${CONFPATH}/links.conf
+	echo "        - starting ${LINKFILE}"
         for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
         do
                 LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
@@ -57,6 +58,6 @@ links_gen ()
                 echo "        };" >> ${LINKFILE}
                 echo "};" >> ${LINKFILE}
         done  
-
+	echo "        - ending ${LINKFILE}"
 }
 

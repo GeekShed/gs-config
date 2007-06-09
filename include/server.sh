@@ -26,6 +26,7 @@
 server_gen ()
 {
 	SERVERFILE=${CONFPATH}/server.conf
+	echo "        - starting ${SERVERFILE}"
 	SLINE=`grep ^S ${STRIPCONF} | grep ${SERVERNAME}`
 	NAME=${SERVERNAME}.${NETWORK}
 	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
@@ -40,5 +41,6 @@ server_gen ()
 	echo "        restart \"${PASS}\" { sha1; };" >>${SERVERFILE}
 	echo "        die \"${PASS}\" { sha1; };" >>${SERVERFILE}
 	echo "};" >>${SERVERFILE}
+	echo "        - ending ${SERVERFILE}"
 }
 

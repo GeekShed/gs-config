@@ -27,6 +27,7 @@
 opers_gen ()
 {
 	OPERFILE=${CONFPATH}/olines.conf
+	echo "        - starting ${OPERFILE}"
 	for OLINES in `grep ^U ${STRIPCONF}`
 	do
     	OSNAME=`echo ${OLINES} | cut -d : -f 2`
@@ -108,4 +109,5 @@ opers_gen ()
 			fi
 		done
 	done
+	echo "        - ending ${OPERFILE}"
 }
