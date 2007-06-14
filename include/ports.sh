@@ -42,8 +42,8 @@ ports_gen ()
 			fi
 			if [ "${OPTIONS}" != "" ] ; then
 				echo -e "\toptions {" >> ${PORTSFILE}
-#				case ${OPTIONS} in *c*) echo -e "\t\tclients-only;" >> ${PORTSFILE} ;;	esac
-#				case ${OPTIONS} in *s*) echo -e "\t\tservers-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *c*) echo -e "\t\tclientsonly;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *s*) echo -e "\t\tserversonly;" >> ${PORTSFILE} ;;	esac
 				case ${OPTIONS} in *l*) echo -e "\t\tssl;" >> ${PORTSFILE} ;;		esac
 				echo -e "\t};" >> ${PORTSFILE}
 			fi
