@@ -26,21 +26,24 @@
 server_gen ()
 {
 	SERVERFILE=${CONFPATH}/server.conf
-	echo "\t- starting ${SERVERFILE}"
+	echo -e "\t- starting ${SERVERFILE}"
 	SLINE=`grep ^S ${STRIPCONF} | grep ${SERVERNAME}`
 	NAME=${SERVERNAME}.${NETWORK}
 	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
 	PASS=`echo ${SLINE} | cut -d : -f 7`
 	INFO=`cat ${SCRIPTROOT}/conf/wyldryde/${SERVERNAME}/info`
-	echo "me {" >>${SERVERFILE}
-	echo "\tname \"${NAME}\";" >>${SERVERFILE}
-	echo "\tinfo \"${INFO}\";" >>${SERVERFILE}
-	echo "\tnumeric ${NUMERIC};" >>${SERVERFILE}
-	echo "};" >>${SERVERFILE}
-	echo "drpass {" >>${SERVERFILE}
-	echo "\trestart \"${PASS}\" { sha1; };" >>${SERVERFILE}
-	echo "\tdie \"${PASS}\" { sha1; };" >>${SERVERFILE}
-	echo "};" >>${SERVERFILE}
-	echo "\t- ending ${SERVERFILE}"
+	echo -e "me {" >>${SERVERFILE}
+	echo -e "\tname \"${NAME}\";" >>${SERVERFILE}
+	echo -e "\tinfo \"${INFO}\";" >>${SERVERFILE}
+	echo -e "\tnumeric ${NUMERIC};" >>${SERVERFILE}
+	echo -e "};" >>${SERVERFILE}
+	echo -e "drpass {" >>${SERVERFILE}
+	echo -e "\trestart \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo -e "\tdie \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo -e "};" >>${SERVERFILE}
+	echo -e "admin {" >>${SERVERFILE}
+	echo -e "\t\"WyldRyde IRC Network\";" >>${SERVERFILE}
+	echo -e "};" >>${SERVERFILE}
+	echo -e "\t- ending ${SERVERFILE}"
 }
 

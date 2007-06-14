@@ -41,7 +41,7 @@ do
 	BINDIP=`echo ${WORKINGSERVER} | cut -f 3 -d : | cut -f 1 -d -`
 	echo "\t- starting ${LINKFILE}"
 	
-	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
+	for REMOTESERVER in "`grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`"
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
 		LINKIP=`echo ${REMOTESERVER} | cut -f 3 -d : | cut -f 1 -d -`
@@ -72,13 +72,13 @@ do
 	done
 	echo "\t- ending ${LINKFILE}"
 	echo "\t- starting ${PORTSFILE}"
-	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
+	for LISTENIP in "`echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`"
 	do
 		for PORTS in `grep ^P ${STRIPCONF}`
 		do
 			PORT=`echo ${PORTS} | cut -f 2 -d :`
 			OPTIONS=`echo ${PORTS} | cut -f 3 -d :`
-			if [ `echo "${LISTENIP}"| grep -c ^\\\[` = "0" ] ; then
+			if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
 				echo "listen [::ffff:${LISTENIP}]:${PORT} {" >> ${PORTSFILE}
 			else
 				echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}

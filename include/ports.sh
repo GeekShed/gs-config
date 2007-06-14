@@ -28,27 +28,27 @@
 ports_gen ()
 {
 	PORTSFILE=${CONFPATH}/ports.conf
-	echo "\t- starting ${PORTSFILE}"
+	echo -e "\t- starting ${PORTSFILE}"
 	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
 		for PORTS in `grep ^P ${STRIPCONF}`
 		do
 			PORT=`echo ${PORTS} | cut -f 2 -d :`
 			OPTIONS=`echo ${PORTS} | cut -f 3 -d :`
-			if [ `echo "${LISTENIP}"| grep -c ^\\\[` = "0" ] ; then
-				echo "listen [::ffff:${LISTENIP}]:${PORT} {" >> ${PORTSFILE}
+			if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
+				echo -e "listen [::ffff:${LISTENIP}]:${PORT} {" >> ${PORTSFILE}
 			else
-				echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 			fi
 			if [ "${OPTIONS}" != "" ] ; then
-				echo "\toptions {" >> ${PORTSFILE}
-				case ${OPTIONS} in *c*) echo "\t\tclients-only;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *s*) echo "\t\tservers-only;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *l*) echo "\t\tssl;" >> ${PORTSFILE} ;;		esac
-				echo "\t};" >> ${PORTSFILE}
+				echo -e "\toptions {" >> ${PORTSFILE}
+#				case ${OPTIONS} in *c*) echo -e "\t\tclients-only;" >> ${PORTSFILE} ;;	esac
+#				case ${OPTIONS} in *s*) echo -e "\t\tservers-only;" >> ${PORTSFILE} ;;	esac
+				case ${OPTIONS} in *l*) echo -e "\t\tssl;" >> ${PORTSFILE} ;;		esac
+				echo -e "\t};" >> ${PORTSFILE}
 			fi
-			echo "};" >> ${PORTSFILE}
+			echo -e "};" >> ${PORTSFILE}
 		done
 	done
-	echo "\t- ending ${PORTSFILE}"
+	echo -e "\t- ending ${PORTSFILE}"
 }

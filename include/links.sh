@@ -26,64 +26,65 @@
 links_gen ()
 {
 	LINKFILE=${CONFPATH}/links.conf
-	echo "\t- starting ${LINKFILE}"
+	echo -e "\t- starting ${LINKFILE}"
 	MYREGION=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 8`
+	BINDIP=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
 	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
 		LINKIP=`echo ${REMOTESERVER} | cut -f 3 -d : | cut -f 1 -d -`
 		REGION=`echo ${REMOTESERVER} | cut -f 8 -d :`
 		OPTIONS=`echo ${REMOTESERVER} | cut -f 5 -d :`
-		echo "link ${LINKNAME}.${NETWORK} {" >> ${LINKFILE}
-		echo "\tusername *;" >> ${LINKFILE}
-		echo "\thostname ${LINKIP};" >> ${LINKFILE}
-		echo "\tbind-ip ${BINDIP};" >> ${LINKFILE}
-		echo "\tport 4400;" >> ${LINKFILE}
-		echo "\tpassword-connect \"wyldryde-l33t-link-password\";" >> ${LINKFILE}
-		echo "\tpassword-recieve \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
+		echo -e "link ${LINKNAME}.${NETWORK} {" >> ${LINKFILE}
+		echo -e "\tusername *;" >> ${LINKFILE}
+		echo -e "\thostname ${LINKIP};" >> ${LINKFILE}
+		echo -e "\tbind-ip ${BINDIP};" >> ${LINKFILE}
+		echo -e "\tport 4400;" >> ${LINKFILE}
+		echo -e "\tpassword-connect \"wyldryde-l33t-link-password\";" >> ${LINKFILE}
+		echo -e "\tpassword-receive \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
 		ISAHUB=0
 		ISMYHUB=0
 		for HLINES in `grep ^H ${STRIPCONF}`
 		do
-			if [ `echo ${HLINES} | cut -d : -f 4` = "${LINKNAME}" ]; then
+			if [ "`echo ${HLINES} | cut -d : -f 4`" = "${LINKNAME}" ]; then
 				ISAHUB=1
-				if [ `echo ${HLINES} | cut -d : -f 2` = "${MYREGION}" ]; then
+				if [ "`echo ${HLINES} | cut -d : -f 2`" = "${MYREGION}" ]; then
 					#this server is the hub for HUBREGION, and MYREGION is HUBREGION so this is my hub
 					ISMYHUB=1
 				fi
 			fi
 		done
 		if [ "${ISAHUB}" = "1" ]; then
-			if [ `grep ^H:0 ${STRIPCONF} | cut -d : -f 4` = "${LINKNAME}" ]; then
+			if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${LINKNAME}" ]; then
 				#this server is the root hub
-				echo "\tclass roothub;" >> ${LINKFILE}
+				echo -e "\tclass roothub;" >> ${LINKFILE}
 			else
-				echo "\tclass hub;" >> ${LINKFILE}
+				echo -e "\tclass hub;" >> ${LINKFILE}
 			fi
-			echo "\thub *;" >> ${LINKFILE}
-			echo "\toptions {" >> ${LINKFILE}
+			echo -e "\thub *;" >> ${LINKFILE}
+			echo -e "\toptions {" >> ${LINKFILE}
 			if [ "${ISMYHUB}" = "1" ]; then
-				echo "\t\tautoconnect;" >> ${LINKFILE}
+				echo -e "\t\tautoconnect;" >> ${LINKFILE}
 			fi
-			case ${OPTIONS} in *s*) echo "\t\tssl;" >> ${LINKFILE} ;;	esac
-			case ${OPTIONS} in *z*) echo "\t\tzip;" >> ${LINKFILE} ;;	esac
-			echo "\t};" >> ${LINKFILE}
+			case ${OPTIONS} in *s*) echo -e "\t\tssl;" >> ${LINKFILE} ;;	esac
+			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
+			echo -e "\t};" >> ${LINKFILE}
 		else
-			echo "\tclass leaf;" >> ${LINKFILE}
-			echo "\thub *;" >> ${LINKFILE}
-			echo "\toptions {" >> ${LINKFILE}
-			if [ `grep ^H:${REGION} ${STRIPCONF} | cut -d : -f 4` = "${SERVERNAME}" ]; then
+			echo -e "\tclass leaf;" >> ${LINKFILE}
+			echo -e "\thub *;" >> ${LINKFILE}
+			echo -e "\toptions {" >> ${LINKFILE}
+			if [ "`grep ^H:${REGION} ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
 				#i am the hub for this region
 				#reverse autoconnect
-				case ${OPTIONS} in *a*) echo "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
+				case ${OPTIONS} in *a*) echo -e "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
 			fi
-			case ${OPTIONS} in *s*) echo "\t\tssl;" >> ${LINKFILE} ;;	esac
-			case ${OPTIONS} in *z*) echo "\t\tzip;" >> ${LINKFILE} ;;	esac
-			case ${OPTIONS} in *q*) echo "\t\tquarantine;" >> ${LINKFILE} ;;	esac
-			echo "\t};" >> ${LINKFILE}
+			case ${OPTIONS} in *s*) echo -e "\t\tssl;" >> ${LINKFILE} ;;	esac
+			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
+			case ${OPTIONS} in *q*) echo -e "\t\tquarantine;" >> ${LINKFILE} ;;	esac
+			echo -e "\t};" >> ${LINKFILE}
 		    fi
-		    echo "};" >> ${LINKFILE}
+		    echo -e "};" >> ${LINKFILE}
 	done
-	echo "\t- ending ${LINKFILE}"
+	echo -e "\t- ending ${LINKFILE}"
 }
 
