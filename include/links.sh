@@ -40,8 +40,8 @@ links_gen ()
 		echo -e "\thostname ${LINKIP};" >> ${LINKFILE}
 		echo -e "\tbind-ip ${BINDIP};" >> ${LINKFILE}
 		echo -e "\tport 4400;" >> ${LINKFILE}
-		echo -e "\tpassword-connect \"wyldryde-l33t-link-password\";" >> ${LINKFILE}
-		echo -e "\tpassword-receive \"\$MMeriLxK\$lVYlZHHBGNvcZcZEBw1d/w==\" { md5; };" >> ${LINKFILE}
+		echo -e "\tpassword-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
+		echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { md5; };" >> ${LINKFILE}
 		ISAHUB=0
 		ISMYHUB=0
 		for HLINES in `grep ^H ${STRIPCONF}`
