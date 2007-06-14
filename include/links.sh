@@ -29,6 +29,13 @@ links_gen ()
 	echo -e "\t- starting ${LINKFILE}"
 	MYREGION=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 8`
 	BINDIP=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
+	echo -e "ulines {" >> ${LINKFILE}
+	for SERVICESSERVER in `grep ^V ${STRIPCONF}`
+	do
+		SRVNAME=`echo ${SERVICESSERVER} | cut -f 2 -d :`
+		echo -e "\"${SRVNAME}\";" >> ${LINKFILE}
+	done
+	echo -e "};" >> ${LINKFILE}
 	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
@@ -41,7 +48,7 @@ links_gen ()
 		echo -e "\tbind-ip ${BINDIP};" >> ${LINKFILE}
 		echo -e "\tport 4400;" >> ${LINKFILE}
 		echo -e "\tpassword-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
-		echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { md5; };" >> ${LINKFILE}
+		echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
 		ISAHUB=0
 		ISMYHUB=0
 		for HLINES in `grep ^H ${STRIPCONF}`
