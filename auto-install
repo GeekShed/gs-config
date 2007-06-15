@@ -81,7 +81,7 @@ ossh() {
 	if [ "${PORT}" = "" ] ; then
 		PORT=22
 	fi
-	ssh -p ${PORT} ${USERNAME}@${SSHIP} \'$*\'
+	ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
 }
 push_server() {
 	if [ "${1}" = "" ] ; then
@@ -95,6 +95,7 @@ push_server() {
 	else
 		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ${1}`
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		ossh ${SERVER} 'rm -rf wr-ircd'
 		cd /tmp/svn/ && tar -cpvf - wr-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
 		ossh ${SERVER} 'cd wr-ircd && ./configure --enable-inet6 --enable-hub --enable-ssl --enable-ziplinks --with-listen=5 --with-dpath=`pwd`  --with-spath=`pwd`/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
 		ossh ${SERVER} 'cd wr-ircd && cd . && make '
