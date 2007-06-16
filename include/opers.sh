@@ -96,7 +96,7 @@ oper_block ()
 						else
 							echo -e "\t\"Server Administrator: ${ONICK}\";" >> ${OPERFILE}
 						fi
-						echo -e "\t\"${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
+						echo -e "\t\"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
 						echo -e "};" >> ${OPERFILE}
 }
 

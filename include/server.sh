@@ -31,7 +31,7 @@ server_gen ()
 	NAME=${SERVERNAME}.${NETWORK}
 	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
 	PASS=`echo ${SLINE} | cut -d : -f 7`
-	INFO=`cat ${SCRIPTROOT}/conf/wyldryde/${SERVERNAME}/info`
+	INFO=`echo ${SLINE} | cut -d : -f 11 | sed s/\_/\ /g`
 	echo -e "me {" >>${SERVERFILE}
 	echo -e "\tname \"${NAME}\";" >>${SERVERFILE}
 	echo -e "\tinfo \"${INFO}\";" >>${SERVERFILE}

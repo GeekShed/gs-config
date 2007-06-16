@@ -36,7 +36,7 @@ ports_gen ()
 			PORT=`echo ${PORTS} | cut -f 2 -d :`
 			OPTIONS=`echo ${PORTS} | cut -f 3 -d :`
 			if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
-				echo -e "listen [::ffff:${LISTENIP}]:${PORT} {" >> ${PORTSFILE}
+				echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 			else
 				echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 			fi

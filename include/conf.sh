@@ -42,3 +42,18 @@ conf_init ()
         mkdir -p ${OUTPUTPATH}/conf
         NETWORK=WyldRyde.org ; export NETWORK
 }
+ossh() {
+        local SERVER=`grep ^S ${STRIPCONF} | grep "${1}"`
+        shift
+        local SSHIP=`echo "${SERVER}" | cut -d : -f 4`
+        if [ "${SSHIP}" = "" ] ; then
+                local SSHIP=`echo "${SERVER}" | cut -d : -f 3 | sed s/-/\ /g | awk ' { print $1; }'`
+        fi
+        local USERNAME=`echo "${SERVER}" | cut -d : -f 9`
+        local PORT=`echo "${SERVER}" | cut -d : -f 10 `
+        if [ "${PORT}" = "" ] ; then
+                local PORT=22
+        fi
+        ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+}
+

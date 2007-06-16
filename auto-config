@@ -34,6 +34,7 @@ conf_init
 
 main () {
 	# run through scripts
+	mkdir -p /tmp/confbackup
 	for WORKINGSERVER in `grep ^S ${STRIPCONF}`
 	do
 		export WORKINGSERVER
@@ -50,6 +51,11 @@ main () {
 					opers) opers_gen ;;
 				esac
 		done
+		cp -Rp ${SCRIPTROOT}/conf/wyldryde/global/* ${CONFPATH}
+		cd ${CONFPATH} 
+		ossh ${SERVERNAME} 'rm -rf data/wr-ircd && mkdir -p data/wr-ircd'
+		tar -cvf - * | bzip2 | ossh ${SERVERNAME} 'bunzip2 | tar -xf - -C data/wr-ircd/' 
+		ossh ${SERVERNAME} 'tar -cf - data | bzip2' >/tmp/confbackup/${SERVERNAME}.tar.bz2
 	done
 }
 

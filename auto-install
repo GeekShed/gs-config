@@ -69,37 +69,55 @@ create_config() {
 
 	
 }
-ossh() {
-	SERVER=`grep ^S ${STRIPCONF} | grep "${1}"`
-	shift
-	SSHIP=`echo "${SERVER}" | cut -d : -f 4`
-	if [ "${SSHIP}" = "" ] ; then
-		SSHIP=`echo "${SERVER}" | cut -d : -f 3 | sed s/-/\ /g | awk ' { print $1; }'`
-	fi
-	USERNAME=`echo "${SERVER}" | cut -d : -f 9`
-	PORT=`echo "${SERVER}" | cut -d : -f 10	`
-	if [ "${PORT}" = "" ] ; then
-		PORT=22
-	fi
-	ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+push_bins() {
+	ossh ${1} 'rm -rf wr-ircd'
+	cd /tmp/svn && tar -cpvf - wr-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
+	ossh ${1} 'cd wr-ircd && ./configure --enable-hub --enable-ssl --enable-ziplinks --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
+	ossh ${1} 'cd wr-ircd && cd . && make '
+	mkdir -p /tmp/binbackup/
+	ossh ${1} 'tar -cpf - wr-ircd | bzip2' > /tmp/binbackup/${1}.tar.bz2
 }
 push_server() {
+	rm -rf /tmp/svn
+	mkdir -p /tmp/svn
+	cd /tmp/svn
+	svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
 	if [ "${1}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 		do
 			SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-			cd /tmp/svn/ && tar -cpvf - wr-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
-			ossh ${SERVER} 'cd wr-ircd \&\& ./configure --enable-inet6 --enable-hub --enable-ssl --enable-ziplinks --with-listen=5 --with-dpath=`pwd`  --with-spath=`pwd`/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
-			ossh ${SERVER} 'cd wr-ircd && cd . && make '
+			push_bins ${SERVER}
 		done
 	else
 		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ${1}`
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		ossh ${SERVER} 'rm -rf wr-ircd'
-		cd /tmp/svn/ && tar -cpvf - wr-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
-		ossh ${SERVER} 'cd wr-ircd && ./configure --enable-inet6 --enable-hub --enable-ssl --enable-ziplinks --with-listen=5 --with-dpath=`pwd`  --with-spath=`pwd`/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
-		ossh ${SERVER} 'cd wr-ircd && cd . && make '
+		push_bins ${SERVER}
 	fi
+}
+backup_module() {
+	ossh ${1} tar -cpf - ${2} >${BACKUPPATH}/${1}/${2}.tar 2>/dev/null
+}
+backup_all() {
+	BACKUPPATH=${HOME}/back/`dd if=/dev/urandom bs=2000 count=2 2>/dev/null | md5sum | awk ' { print $1; }'`
+	mkdir -p ${BACKUPPATH}
+	DATE=`date +%Y%m%d%H%M`
+	echo "${DATE}=${BACKUPPATH}" >> ${HOME}/back/back.log
+        for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+        do
+            SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+	    mkdir -p ${BACKUPPATH}/${SERVER}
+            backup_module ${SERVER} wr-ircd
+            backup_module ${SERVER} wr-area51
+            backup_module ${SERVER} .ssh
+            backup_module ${SERVER} bopm
+            backup_module ${SERVER} services
+            backup_module ${SERVER} data
+            backup_module ${SERVER} Unreal3.2.x
+            backup_module ${SERVER} unreal
+        done
+	tar -cf ${BACKUPPATH}/${DATE}.tar ${BACKUPPATH}/*
+	bzip2 ${BACKUPPATH}/${DATE}.tar
+
 }
 
 usage() {
@@ -107,6 +125,7 @@ usage() {
 	echo -e "\t${COMMAND} push"
 	echo -e "\t${COMMAND} create"
 	echo -e "\t${COMMAND} add"
+	echo -e "\t${COMMAND} backup"
 }
 
 case "${1}" in
@@ -119,6 +138,9 @@ case "${1}" in
 	;;
 	[cC][rR][eE][aA][tT][eE])
 		create_config $2
+	;;
+	[bB][aA][cC][kK][uU][pP])
+		backup_all
 	;;
 	*)
 		usage
