@@ -28,7 +28,7 @@ server_gen ()
 	SERVERFILE=${CONFPATH}/server.conf
 	echo -e "\t- starting ${SERVERFILE}"
 	SLINE=`grep ^S ${STRIPCONF} | grep ${SERVERNAME}`
-	NAME=${SERVERNAME}.${NETWORK}
+	NAME=${SERVERNAME}.${DNSSUFFIX}
 	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
 	PASS=`echo ${SLINE} | cut -d : -f 7`
 	INFO=`echo ${SLINE} | cut -d : -f 11 | sed s/\_/\ /g`
@@ -42,7 +42,7 @@ server_gen ()
 	echo -e "\tdie \"${PASS}\" { sha1; };" >>${SERVERFILE}
 	echo -e "};" >>${SERVERFILE}
 	echo -e "admin {" >>${SERVERFILE}
-	echo -e "\t\"WyldRyde IRC Network\";" >>${SERVERFILE}
+	echo -e "\t\"${NETWORK} IRC Network\";" >>${SERVERFILE}
 	echo -e "};" >>${SERVERFILE}
 	echo -e "\t- ending ${SERVERFILE}"
 }

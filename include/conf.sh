@@ -40,7 +40,8 @@ conf_init ()
         grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
         STRIPCONF=${OUTPUTPATH}/network.conf ; export STRIPCONF
         mkdir -p ${OUTPUTPATH}/conf
-        NETWORK=WyldRyde.org ; export NETWORK
+        NETWORK=`grep ^N ${STRIPCONF} | cut -d : -f 2` ; export NETWORK
+	DNSSUFFIX=`grep ^N ${STRIPCONF} | cut -d : -f 3`
 }
 ossh() {
         local SERVER=`grep ^S ${STRIPCONF} | grep "${1}"`

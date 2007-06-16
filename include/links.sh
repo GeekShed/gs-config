@@ -42,7 +42,7 @@ links_gen ()
 		LINKIP=`echo ${REMOTESERVER} | cut -f 3 -d : | cut -f 1 -d -`
 		REGION=`echo ${REMOTESERVER} | cut -f 8 -d :`
 		OPTIONS=`echo ${REMOTESERVER} | cut -f 5 -d :`
-		echo -e "link ${LINKNAME}.${NETWORK} {" >> ${LINKFILE}
+		echo -e "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
 		echo -e "\tusername *;" >> ${LINKFILE}
 		echo -e "\thostname ${LINKIP};" >> ${LINKFILE}
 		echo -e "\tbind-ip ${BINDIP};" >> ${LINKFILE}
