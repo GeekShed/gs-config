@@ -72,7 +72,7 @@ create_config() {
 push_bins() {
 	ossh ${1} 'rm -rf wr-ircd'
 	cd /tmp/svn && tar -cpvf - wr-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
-	ossh ${1} 'cd wr-ircd && ./configure --enable-hub --enable-ziplinks --enable-ssl --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
+	ossh ${1} 'cd wr-ircd && ./configure --enable-hub  --enable-ssl --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
 	ossh ${1} 'cd wr-ircd && cd . && make clean && make'
 	mkdir -p /tmp/binbackup/
 	ossh ${1} 'tar -cpf - wr-ircd | bzip2' > /tmp/binbackup/${1}.tar.bz2
@@ -123,7 +123,7 @@ ping() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null`"
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} cc -v 2>/dev/null`"
 	done
 }
 usage() {
