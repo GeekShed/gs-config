@@ -55,6 +55,14 @@ ossh() {
         if [ "${PORT}" = "" ] ; then
                 local PORT=22
         fi
-        ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+	local OFLAG="`echo ${SERVER} | cut -d : -f 5`"
+	case "${OFLAG}" in 
+		*n*)
+			local NOSSH=1
+		;;
+	esac
+	if [ "${NOSSH}" != "1" ] ; then
+		    ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+	fi
 }
 

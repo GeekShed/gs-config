@@ -44,35 +44,41 @@ oper_block ()
 						esac
 						echo -e "\tflags {"  >> ${OPERFILE}
 						OPACCESS=0
-						if [ "${1}" = "global" ] ; then
-							OPACCESS=3
-							echo -e "\t\tnetadmin;" >> ${OPERFILE}
-						fi
-						case ${OTYPE} in
-							*O*)
-								echo -e "\t\tlocal;" >> ${OPERFILE}
-								OPACCESS=1
-								;;
-							*o*)
-								echo -e "\t\tglobal;" >> ${OPERFILE}
-								OPACCESS=2
-								;;
-							*C*)
-								echo -e "\t\tcoadmin;" >> ${OPERFILE}
-								OPACCESS=3
-								;;
-							*A*)
-								echo -e "\t\tadmin;" >> ${OPERFILE}
-								OPACCESS=3
-								;;
-							*a*)
-								echo -e "\t\tservices-admin;" >> ${OPERFILE}
-								OPACCESS=3
-								;;
-							*N*)
+						case ${OFLAGS} in
+							*[rg]*)
 								echo -e "\t\tnetadmin;" >> ${OPERFILE}
-								OPACCESS=3
-								;;
+							;;
+							*a*)
+								echo -e "\t\tnetadmin;" >> ${OPERFILE}
+							;;
+							*)
+								case ${OTYPE} in
+									*O*)
+										echo -e "\t\tlocal;" >> ${OPERFILE}
+										OPACCESS=1
+									;;
+									*o*)
+										echo -e "\t\tglobal;" >> ${OPERFILE}
+										OPACCESS=2
+									;;
+									*C*)
+										echo -e "\t\tcoadmin;" >> ${OPERFILE}
+										OPACCESS=3
+									;;
+									*A*)
+										echo -e "\t\tadmin;" >> ${OPERFILE}
+										OPACCESS=3
+									;;
+									*a*)
+										echo -e "\t\tservices-admin;" >> ${OPERFILE}
+										OPACCESS=3
+									;;
+									*N*)
+										echo -e "\t\tnetadmin;" >> ${OPERFILE}
+										OPACCESS=3
+									;;
+								esac
+							;;
 						esac
 						if [ "${OPACCESS}" -ge "1" ]; then
 							echo -e "\t\tcan_zline;" >> ${OPERFILE}
@@ -96,19 +102,34 @@ oper_block ()
 							echo -e "\tswhois \"${OWHOIS}\";" >> ${OPERFILE}
 						fi
 				    		echo -e "};" >> ${OPERFILE}
-						echo -e "admin {" >> ${OPERFILE}
-						if [ "${1}" = "global" ] ; then
-							echo -e "\t\"Global Administrator: ${ONICK}\";" >> ${OPERFILE}
-						else
-							case ${OTYPE} in
-								*[oO]*)
-									echo -e "\t\"Server Operator: ${ONICK}\";" >> ${OPERFILE}
-								;;
-								*)
-									echo -e "\t\"Server Administrator: ${ONICK}\";" >> ${OPERFILE}
-								;;
-							esac
-						fi
+						case ${OFLAGS} in
+							*b*)
+							;;
+							*)
+								echo -e "admin {" >> ${OPERFILE}
+								case ${OFLAGS} in
+									*[r]*)
+										echo -e "\t\"Root Administrator: ${ONICK}\";" >> ${OPERFILE}
+									;;
+									*[g]*)
+										echo -e "\t\"Global Administrator: ${ONICK}\";" >> ${OPERFILE}
+									;;
+									*[a]*)
+										echo -e "\t\"Services Administrator: ${ONICK}\";" >> ${OPERFILE}
+									;;
+									*)
+										case ${OTYPE} in
+											*[oO]*)
+												echo -e "\t\"Server Operator: ${ONICK}\";" >> ${OPERFILE}
+											;;
+											*)
+												echo -e "\t\"Server Administrator: ${ONICK}\";" >> ${OPERFILE}
+											;;
+										esac
+									;;
+								esac
+							;;
+						esac
 						echo -e "\t\"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
 						echo -e "};" >> ${OPERFILE}
 }
@@ -128,19 +149,25 @@ opers_gen ()
 		ONICK=`echo ${OLINES} | cut -d : -f 9`
 		OWHOIS=`echo ${OLINES} | cut -d : -f 10| sed s/\_/\ /g`
 		OSERVERS=`echo ${OLINES} | cut -d : -f 6 | sed s/-/\ /g`
+		MASTERSERVER=`grep ^N ${STRIPCONF} | cut -d : -f 4`
 		case ${OFLAGS} in
 			*g*)
-				oper_block global
+				oper_block
 			;;
 			*)
-				for USERVERS in ${OSERVERS}
-				do
-					OTYPE=`echo ${USERVERS} | cut -f 1 -d @`
-					OSERVER=`echo ${USERVERS} | cut -f 2 -d @`
-					if [ "${OSERVER}" = "${SERVERNAME}" ] ; then
-						oper_block
-					fi
-				done
+				if [ "${SERVERNAME}" = "${MASTERSERVER}" ] ; then
+					OTYPE=o
+					oper_block 
+				else
+					for USERVERS in ${OSERVERS}
+					do
+						OTYPE=`echo ${USERVERS} | cut -f 1 -d @`
+						OSERVER=`echo ${USERVERS} | cut -f 2 -d @`
+						if [ "${OSERVER}" = "${SERVERNAME}" ] ; then
+							oper_block
+						fi
+					done
+				fi
 			;;
 		esac 
 	done

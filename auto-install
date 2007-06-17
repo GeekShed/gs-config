@@ -72,7 +72,7 @@ create_config() {
 push_bins() {
 	ossh ${1} 'rm -rf wr-ircd'
 	cd /tmp/svn && tar -cpvf - wr-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
-	ossh ${1} 'cd wr-ircd && ./configure --enable-hub --enable-ssl --enable-ziplinks --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
+	ossh ${1} 'cd wr-ircd && ./configure --enable-hub --enable-ziplinks --enable-ssl --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
 	ossh ${1} 'cd wr-ircd && cd . && make clean && make'
 	mkdir -p /tmp/binbackup/
 	ossh ${1} 'tar -cpf - wr-ircd | bzip2' > /tmp/binbackup/${1}.tar.bz2
@@ -97,7 +97,7 @@ push_server() {
 backup_module() {
 	ossh ${1} tar -cpf - ${2} >${BACKUPPATH}/${1}/${2}.tar 2>/dev/null
 }
-backup_all() {
+backup_sys() {
 	BACKUPPATH=${HOME}/back/`dd if=/dev/urandom bs=2000 count=2 2>/dev/null | md5sum | awk ' { print $1; }'`
 	mkdir -p ${BACKUPPATH}
 	DATE=`date +%Y%m%d%H%M`
@@ -119,13 +119,20 @@ backup_all() {
 	bzip2 ${BACKUPPATH}/${DATE}.tar
 
 }
-
+ping() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null`"
+	done
+}
 usage() {
 	echo "usage:"
 	echo -e "\t${COMMAND} push"
 	echo -e "\t${COMMAND} create"
 	echo -e "\t${COMMAND} add"
 	echo -e "\t${COMMAND} backup"
+	echo -e "\t${COMMAND} ping"
 }
 
 case "${1}" in
@@ -140,7 +147,10 @@ case "${1}" in
 		create_config $2
 	;;
 	[bB][aA][cC][kK][uU][pP])
-		backup_all
+		backup_sys $2
+	;;
+	[pP][iI][Nn][Gg])
+		ping $2
 	;;
 	*)
 		usage
