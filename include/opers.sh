@@ -35,7 +35,13 @@ oper_block ()
 							echo -e "\t\tuserhost \"${UHOSTS}\";" >> ${OPERFILE}
 						done
 						echo -e "\t};" >> ${OPERFILE}
-						echo -e "\tpassword \"${OPHASH}\" { sha1; }; " >> ${OPERFILE}
+						case ${OFLAGS} in
+							*m*)
+								echo -e "\tpassword \"${OPHASH}\" { md5; }; " >> ${OPERFILE}
+							;;
+							*)
+								echo -e "\tpassword \"${OPHASH}\" { sha1; }; " >> ${OPERFILE}
+						esac
 						echo -e "\tflags {"  >> ${OPERFILE}
 						OPACCESS=0
 						if [ "${1}" = "global" ] ; then
@@ -94,7 +100,14 @@ oper_block ()
 						if [ "${1}" = "global" ] ; then
 							echo -e "\t\"Global Administrator: ${ONICK}\";" >> ${OPERFILE}
 						else
-							echo -e "\t\"Server Administrator: ${ONICK}\";" >> ${OPERFILE}
+							case ${OTYPE} in
+								*[oO]*)
+									echo -e "\t\"Server Operator: ${ONICK}\";" >> ${OPERFILE}
+								;;
+								*)
+									echo -e "\t\"Server Administrator: ${ONICK}\";" >> ${OPERFILE}
+								;;
+							esac
 						fi
 						echo -e "\t\"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
 						echo -e "};" >> ${OPERFILE}
