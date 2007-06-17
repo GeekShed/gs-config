@@ -123,7 +123,8 @@ ping() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} cc -v 2>/dev/null`"
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version | 
+head -n 1 2>/dev/null`"
 	done
 }
 usage() {
