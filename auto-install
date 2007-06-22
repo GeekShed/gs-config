@@ -70,7 +70,6 @@ create_config() {
 	
 }
 push_bins() {
-	ossh ${1} 'rm -rf wr-ircd'
 	cd /tmp/svn && tar -cpvf - wr-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
 	ossh ${1} 'cd wr-ircd && ./configure --enable-hub  --enable-ssl --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --with-fd-setsize=1024 --enable-dynamic-linking'
 	ossh ${1} 'cd wr-ircd && cd . && make clean && make'
@@ -123,10 +122,48 @@ ping() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | 
-head -n 1 `"
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 `"
+        done
+}
+dump_list() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		echo -e ${SERVER}
+		for USERS in `grep ^U ${STRIPCONF}`
+		do
+			case `echo ${USERS} | cut -d : -f 5` in
+				*g*)
+					DROPIT=y	
+				;;
+				*r*)
+					DROPIT=y
+				;;
+				*)
+					DROPIT=n
+				;;
+			esac
+			if [ "${DROPIT}" != "y" ] ; then
+				for servern in `echo ${USERS} | cut -d : -f 6 | sed s/\-/\ /g`
+				do
+					if [ "` echo ${servern} | cut -d @ -f 2`" = "${SERVER}" ] ; then
+						echo -e "\t`echo ${servern} | cut -d @ -f 1`=`echo ${USERS} | cut -d : -f 3 | sed s/\_/\ /g` <`echo ${USERS} | cut -d : -f 2`>"
+					fi
+				done
+			fi
+		done
+        done
+	
+}
+rehash_list() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		echo ${SERVER}
+		ossh ${SERVER} killall -1 ircd 2>/dev/null
 	done
 }
+
 usage() {
 	echo "usage:"
 	echo -e "\t${COMMAND} push"
@@ -134,7 +171,10 @@ usage() {
 	echo -e "\t${COMMAND} add"
 	echo -e "\t${COMMAND} backup"
 	echo -e "\t${COMMAND} ping"
+	echo -e "\t${COMMAND} dump"
+	echo -e "\t${COMMAND} rehash"
 }
+
 
 case "${1}" in
 	[pP][uU][sS][hH]) 
@@ -152,6 +192,12 @@ case "${1}" in
 	;;
 	[pP][iI][Nn][Gg])
 		ping $2
+	;;
+	[dD][uU][mM][pP])
+		dump_list
+	;;
+	[rR][eE][hH][aA][sS][hH])
+		rehash_list
 	;;
 	*)
 		usage

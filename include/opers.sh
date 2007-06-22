@@ -47,9 +47,12 @@ oper_block ()
 						case ${OFLAGS} in
 							*[rg]*)
 								echo -e "\t\tnetadmin;" >> ${OPERFILE}
+								OPACCESS=3
+								OPACCESS=3
 							;;
 							*a*)
-								echo -e "\t\tnetadmin;" >> ${OPERFILE}
+								echo -e "\t\tservices-admin;" >> ${OPERFILE}
+								OPACCESS=3
 							;;
 							*)
 								case ${OTYPE} in
@@ -152,6 +155,9 @@ opers_gen ()
 		MASTERSERVER=`grep ^N ${STRIPCONF} | cut -d : -f 4`
 		case ${OFLAGS} in
 			*g*)
+				oper_block
+			;;
+			*r*)
 				oper_block
 			;;
 			*)
