@@ -182,7 +182,11 @@ case "${1}" in
 		push_server $2
 	;;
 	[aA][dD][dD])
-		add_server $2
+		case "${2}" in
+			[gG][lL][oO][bB][aA][lL])
+				
+			;;
+		esac
 	;;
 	[cC][rR][eE][aA][tT][eE])
 		create_config $2

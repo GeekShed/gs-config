@@ -62,7 +62,11 @@ ossh() {
 		;;
 	esac
 	if [ "${NOSSH}" != "1" ] ; then
-		    ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+		if [ "${WRAPPER}" = "" ] ; then
+			ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+		else
+			ssh -p ${PORT} ${USERNAME}@${SSHIP} $*
+		fi
 	fi
 }
 

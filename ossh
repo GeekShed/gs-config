@@ -27,9 +27,12 @@
 # SUCH DAMAGE.
 
 
-for i in `ls include/*`
+for script in include/*
 do
-	. ${i}
+        . ${script}
 done
 
-	ossh $* \${SHELL}
+conf_init
+
+	WRAPPER=yes
+	ossh $*
