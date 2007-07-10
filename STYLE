@@ -36,3 +36,22 @@ Adding new files:
 Modifying files:
 	* change COPYRIGHT year to the year you edited it, if applicable.
 	* please modify the CREDITS file to reflect any major changes you've done.
+	* in the log, use a 'verbose log' format, list each change to each file seperated by a blank line, ie:
+
+	  fixed bug in opers.sh so rg and a get OPACCESS set correctly
+
+	  fixed opers.sh to run oper_block on all servers for root admins
+
+	  removed the rm -rf from auto-install so we don't get stale vnodes anymore by accident
+
+	  added dump and rehash targets to auto-install
+
+	  dump parses the config and makes a pretty list of opers per server
+
+	  rehash simply rehashes all ircds the user on sshd has running using killall
+
+	  updated usage to reflect this
+
+	  added ossh script to support using the internal ossh function (currently does not work)
+
+	  etc..
