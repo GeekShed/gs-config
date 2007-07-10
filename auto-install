@@ -114,8 +114,10 @@ backup_sys() {
             backup_module ${SERVER} Unreal3.2.x
             backup_module ${SERVER} unreal
         done
-	tar -cf ${BACKUPPATH}/${DATE}.tar ${BACKUPPATH}/*
-	bzip2 ${BACKUPPATH}/${DATE}.tar
+	tar -cf ${BACKUPPATH}/home.tar -x back /home/wamphyre/* /home/wamphyre/.*
+	tar -cf ${BACKUPPATH}/local.tar /usr/local/*
+	tar -cf ${HOME}/back/${DATE}.tar ${BACKUPPATH}/*
+	bzip2 ${HOME}/back/${DATE}.tar
 
 }
 ping() {
