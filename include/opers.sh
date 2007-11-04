@@ -94,9 +94,9 @@ oper_block ()
 							echo -e "\t\tcan_gkline;" >> ${OPERFILE}
 							echo -e "\t\tcan_restart;" >> ${OPERFILE}
 							echo -e "\t\tcan_override;" >> ${OPERFILE}
+							echo -e "\t\tcan_gzline;" >> ${OPERFILE}
 						fi
 						if [ "${OPACCESS}" -ge "3" ]; then
-							echo -e "\t\tcan_gzline;" >> ${OPERFILE}
 							echo -e "\t\tcan_die;" >> ${OPERFILE}
 						fi
 						echo -e "\t};" >> ${OPERFILE}
