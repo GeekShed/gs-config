@@ -36,6 +36,14 @@ links_gen ()
 		echo -e "\"${SRVNAME}\";" >> ${LINKFILE}
 	done
 	echo -e "};" >> ${LINKFILE}
+	IAMTHEHUB=0
+	IAMTHEROOTHUB=0
+	if [ "`grep ^H:${REGION} ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
+		IAMTHEHUB=1
+	fi
+	if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
+		IAMTHEROOTHUB=1
+	fi	
 	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
@@ -69,7 +77,7 @@ links_gen ()
 				#so we can use the maxclients=1 to prevent a leaf bridging hubs
 				echo -e "\tclass hub;" >> ${LINKFILE}
 			else
-				if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
+				if [ "${IAMTHEROOTHUB}" = "1" ]; then
 					#i am the root hub, allow multiple hubs to connect to me
 					echo -e "\tclass servers;" >> ${LINKFILE}
 				else
@@ -88,7 +96,7 @@ links_gen ()
 			echo -e "\tclass leaf;" >> ${LINKFILE}
 			echo -e "\thub *;" >> ${LINKFILE}
 			echo -e "\toptions {" >> ${LINKFILE}
-			if [ "`grep ^H:${REGION} ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
+			if [ "${IAMTHEHUB}" = "1" ]; then
 				#i am the hub for this region
 				#reverse autoconnect
 				case ${OPTIONS} in *a*) echo -e "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
@@ -97,8 +105,8 @@ links_gen ()
 			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
 			case ${OPTIONS} in *q*) echo -e "\t\tquarantine;" >> ${LINKFILE} ;;	esac
 			echo -e "\t};" >> ${LINKFILE}
-		    fi
-		    echo -e "};" >> ${LINKFILE}
+		fi
+		echo -e "};" >> ${LINKFILE}
 	done
 	echo -e "\t- ending ${LINKFILE}"
 }
