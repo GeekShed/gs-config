@@ -64,9 +64,17 @@ links_gen ()
 		if [ "${ISAHUB}" = "1" ]; then
 			if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${LINKNAME}" ]; then
 				#this server is the root hub
-				echo -e "\tclass roothub;" >> ${LINKFILE}
-			else
+				#echo -e "\tclass roothub;" >> ${LINKFILE}
+				#instead, lets treat this as a normal hub for now
+				#so we can use the maxclients=1 to prevent a leaf bridging hubs
 				echo -e "\tclass hub;" >> ${LINKFILE}
+			else
+				if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
+					#i am the root hub, allow multiple hubs to connect to me
+					echo -e "\tclass servers;" >> ${LINKFILE}
+				else
+					echo -e "\tclass hub;" >> ${LINKFILE}
+				fi
 			fi
 			echo -e "\thub *;" >> ${LINKFILE}
 			echo -e "\toptions {" >> ${LINKFILE}
