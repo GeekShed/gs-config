@@ -36,11 +36,7 @@ links_gen ()
 		echo -e "\"${SRVNAME}\";" >> ${LINKFILE}
 	done
 	echo -e "};" >> ${LINKFILE}
-	IAMTHEHUB=0
 	IAMTHEROOTHUB=0
-	if [ "`grep ^H:${REGION} ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
-		IAMTHEHUB=1
-	fi
 	if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
 		IAMTHEROOTHUB=1
 	fi	
@@ -59,6 +55,10 @@ links_gen ()
 		echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { md5; };" >> ${LINKFILE}
 		ISAHUB=0
 		ISMYHUB=0
+		IAMTHEHUB=0
+		if [ "`grep ^H:${REGION} ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
+			IAMTHEHUB=1
+		fi
 		for HLINES in `grep ^H ${STRIPCONF}`
 		do
 			if [ "`echo ${HLINES} | cut -d : -f 4`" = "${LINKNAME}" ]; then
@@ -96,10 +96,12 @@ links_gen ()
 			echo -e "\tclass leaf;" >> ${LINKFILE}
 			echo -e "\thub *;" >> ${LINKFILE}
 			echo -e "\toptions {" >> ${LINKFILE}
-			if [ "${IAMTHEHUB}" = "1" ]; then
-				#i am the hub for this region
-				#reverse autoconnect
-				case ${OPTIONS} in *a*) echo -e "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
+			if [ "${IAMTHEHUB}" = "1"]; then
+				if [ "${REGION}" = "${MYREGION}" ]; then
+					#i am the hub for this region
+					#reverse autoconnect
+					case ${OPTIONS} in *a*) echo -e "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
+				fi
 			fi
 			case ${OPTIONS} in *s*) echo -e "\t\tssl;" >> ${LINKFILE} ;;	esac
 			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
