@@ -31,24 +31,48 @@ ports_gen ()
 	echo -e "\t- starting ${PORTSFILE}"
 	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
+		SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
+		case "${SOPTIONS}" in
+			*o*)
+				SSLONLY="yes"
+			;;
+			*)
+				unset SSLONLY
+			;;
+		esac
+
 		for PORTS in `grep ^P ${STRIPCONF}`
 		do
-			PORT=`echo ${PORTS} | cut -f 2 -d :`
-			OPTIONS=`echo ${PORTS} | cut -f 3 -d :`
-			if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
-				echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
-			else
-				echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+			PORT="`echo ${PORTS} | cut -f 2 -d :`"
+			OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
+			case "${OPTIONS}" in
+				*l*)
+					USEPORTS=yes
+				;;
+				*s*)
+					USEPORTS=yes
+				;;
+				*)
+					unset USEPORTS
+				;;
+			esac
+			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
+				if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
+					echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				else
+					echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				fi
+				if [ "${OPTIONS}" != "" ] ; then
+					echo -e "\toptions {" >> ${PORTSFILE}
+					case ${OPTIONS} in *c*) echo -e "\t\tclientsonly;" >> ${PORTSFILE} ;;	esac
+					case ${OPTIONS} in *s*) echo -e "\t\tserversonly;" >> ${PORTSFILE} ;;	esac
+					case ${OPTIONS} in *l*) echo -e "\t\tssl;" >> ${PORTSFILE} ;;		esac
+					echo -e "\t};" >> ${PORTSFILE}
+				fi
+				echo -e "};" >> ${PORTSFILE}
 			fi
-			if [ "${OPTIONS}" != "" ] ; then
-				echo -e "\toptions {" >> ${PORTSFILE}
-				case ${OPTIONS} in *c*) echo -e "\t\tclientsonly;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *s*) echo -e "\t\tserversonly;" >> ${PORTSFILE} ;;	esac
-				case ${OPTIONS} in *l*) echo -e "\t\tssl;" >> ${PORTSFILE} ;;		esac
-				echo -e "\t};" >> ${PORTSFILE}
-			fi
-			echo -e "};" >> ${PORTSFILE}
 		done
+
 	done
 	echo -e "\t- ending ${PORTSFILE}"
 }

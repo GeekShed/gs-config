@@ -96,7 +96,7 @@ links_gen ()
 			echo -e "\tclass leaf;" >> ${LINKFILE}
 			echo -e "\thub *;" >> ${LINKFILE}
 			echo -e "\toptions {" >> ${LINKFILE}
-			if [ "${IAMTHEHUB}" = "1"]; then
+			if [ "${IAMTHEHUB}" = "1" ]; then
 				if [ "${REGION}" = "${MYREGION}" ]; then
 					#i am the hub for this region
 					#reverse autoconnect
