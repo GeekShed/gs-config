@@ -1,0 +1,3 @@
+For auto-install prime to work correctly, ssl certificates must be placed in this directory.
+
+They must all have the extension .pem

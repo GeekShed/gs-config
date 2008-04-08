@@ -69,6 +69,13 @@ create_config() {
 
 	
 }
+prime_server() {
+        ossh ${1} 'rm -rf data/ && mkdir -p data/logs/ && mkdir data/wr-ircd/ && touch data/logs/unreal.log && touch data/local.conf'
+        cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./data'
+}
+make_modules() {
+        ossh ${1} 'cd wr-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi'
+}
 push_bins() {
 	cd /tmp/svn && tar -cpvf - wr-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
 	ossh ${1} 'cd wr-ircd && ./configure --enable-hub  --enable-ssl --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
@@ -175,6 +182,8 @@ usage() {
 	echo -e "\t${COMMAND} ping"
 	echo -e "\t${COMMAND} dump"
 	echo -e "\t${COMMAND} rehash"
+        echo -e "\t${COMMAND} prime"
+        echo -e "\t$(COMMAND) makemodules"
 }
 
 
@@ -202,6 +211,12 @@ case "${1}" in
 	[dD][uU][mM][pP])
 		dump_list
 	;;
+        [pP][rR][iI][mM][eE])
+                prime_server $2
+        ;;
+        [mM][aA][kK][eE][mM][oO][dD][uU][lL][eE][sS])
+                make_modules $2
+        ;;
 	[rR][eE][hH][aA][sS][hH])
 		rehash_list
 	;;
