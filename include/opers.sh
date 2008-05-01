@@ -131,10 +131,11 @@ oper_block ()
 										esac
 									;;
 								esac
+
+								echo -e "\t\"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
+								echo -e "};" >> ${OPERFILE}
 							;;
 						esac
-						echo -e "\t\"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
-						echo -e "};" >> ${OPERFILE}
 						
 						# Ban Exceptions
 						case ${OFLAGS} in
