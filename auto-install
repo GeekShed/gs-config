@@ -183,7 +183,7 @@ usage() {
 	echo -e "\t${COMMAND} dump"
 	echo -e "\t${COMMAND} rehash"
         echo -e "\t${COMMAND} prime"
-        echo -e "\t$(COMMAND) makemodules"
+        echo -e "\t${COMMAND} makemodules"
 }
 
 
