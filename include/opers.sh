@@ -142,7 +142,7 @@ oper_block ()
 								for UEXCEPTS in `echo ${OEXCEPTS} | sed s/_/\ /g`
 								do
 									echo -e "except ban {" >> ${OPERFILE}
-									echo -e "\tmask ${UEXCEPT};" >> ${OPERFILE}
+									echo -e "\tmask ${UEXCEPTS};" >> ${OPERFILE}
 									echo -e "};" >> ${OPERFILE}
 								done
 							;;
