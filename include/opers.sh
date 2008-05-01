@@ -142,8 +142,14 @@ oper_block ()
 							*[rg]*)
 								for UEXCEPTS in `echo ${OEXCEPTS} | sed s/_/\ /g`
 								do
-									echo -e "except ban {" >> ${OPERFILE}
+									echo -e "except tkl {" >> ${OPERFILE}
 									echo -e "\tmask ${UEXCEPTS};" >> ${OPERFILE}
+									echo -e "\ttype { " >> ${OPERFILE}
+									echo -e "\t\tgline;" >> ${OPERFILE}
+									echo -e "\t\tgzline;" >> ${OPERFILE}
+									echo -e "\t\tshun;" >> ${OPERFILE}
+									echo -e "\t\tqline;" >> ${OPERFILE}
+									echo -e "\t};" >> ${OPERFILE}
 									echo -e "};" >> ${OPERFILE}
 								done
 							;;
