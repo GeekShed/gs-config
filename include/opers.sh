@@ -135,6 +135,20 @@ oper_block ()
 						esac
 						echo -e "\t\"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
 						echo -e "};" >> ${OPERFILE}
+						
+						# Ban Exceptions
+						case ${OFLAGS} in
+							*[rg]*)
+								for UEXCEPTS in `echo ${OEXCEPTS} | sed s/_/\ /g`
+								do
+									echo -e "except ban {" >> ${OPERFILE}
+									echo -e "\tmask ${UEXCEPT};" >> ${OPERFILE}
+									echo -e "};" >> ${OPERFILE}
+								done
+							;;
+							*)
+							;;
+						esac
 }
 
 opers_gen ()
@@ -148,6 +162,7 @@ opers_gen ()
 		OPHASH=`echo ${OLINES} | cut -d : -f 4`
 		OFLAGS=`echo ${OLINES} | cut -d : -f 5`
 		OHOSTS=`echo ${OLINES} | cut -d : -f 7`
+		OEXCEPTS=`echo ${OLINES} | cut -d : -f 11`
 		OEMAIL=`echo ${OLINES} | cut -d : -f 8`
 		ONICK=`echo ${OLINES} | cut -d : -f 9`
 		OWHOIS=`echo ${OLINES} | cut -d : -f 10| sed s/\_/\ /g`
