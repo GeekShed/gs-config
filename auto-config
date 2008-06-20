@@ -53,7 +53,7 @@ main () {
 		done
 		cp -Rp ${SCRIPTROOT}/conf/wyldryde/global/* ${CONFPATH}
 		cd ${CONFPATH} 
-		ossh ${SERVERNAME} 'rm -rf data/wr-ircd && mkdir -p data/wr-ircd'
+#		ossh ${SERVERNAME} 'rm -rf data/wr-ircd && mkdir -p data/wr-ircd'
 		tar -cvf - * | bzip2 | ossh ${SERVERNAME} 'bunzip2 | tar -xf - -C data/wr-ircd/' 
 		ossh ${SERVERNAME} 'tar -cf - data | bzip2' >/tmp/confbackup/${SERVERNAME}.tar.bz2
 	done

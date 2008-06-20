@@ -27,6 +27,8 @@
 # SUCH DAMAGE.
 
 
+cd ~/wr-area51/
+
 for script in include/*
 do
         . ${script}

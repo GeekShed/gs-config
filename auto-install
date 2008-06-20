@@ -131,8 +131,9 @@ ping() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 `"
-        done
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} 'grep MAXCONNECTIONS wr-ircd/config.log | head -n 1'` "
+
+done
 }
 dump_list() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
@@ -173,6 +174,10 @@ rehash_list() {
 	done
 }
 
+add_server() {
+	ossh ${1} mkdir -p data/wr-ircd
+	ossh ${1} mkdir -p wr-ircd
+}
 usage() {
 	echo "usage:"
 	echo -e "\t${COMMAND} push"
@@ -187,17 +192,14 @@ usage() {
 }
 
 
+
 case "${1}" in
 	[pP][uU][sS][hH]) 
 		check_config
 		push_server $2
 	;;
 	[aA][dD][dD])
-		case "${2}" in
-			[gG][lL][oO][bB][aA][lL])
-				
-			;;
-		esac
+		add_server $2
 	;;
 	[cC][rR][eE][aA][tT][eE])
 		create_config $2
