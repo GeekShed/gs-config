@@ -34,14 +34,13 @@ conf_init
 
 main () {
 	# run through scripts
-	mkdir -p /tmp/confbackup
 	for WORKINGSERVER in `grep ^S ${STRIPCONF}`
 	do
 		export WORKINGSERVER
 		SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :` ; export SERVERNAME
 		REGION=`echo ${WORKINGSERVER} | cut -f 9 -d :` ; export REGION
 		CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME} ; export CONFPATH
-		mkdir ${CONFPATH}
+		mkdir -p ${CONFPATH}
 		for args in $*
 		do
 				case ${args} in
@@ -53,11 +52,10 @@ main () {
 		done
 		cp -Rp ${SCRIPTROOT}/conf/wyldryde/global/* ${CONFPATH}
 		cd ${CONFPATH} 
-#		ossh ${SERVERNAME} 'rm -rf data/wr-ircd && mkdir -p data/wr-ircd'
-		tar -cvf - * | bzip2 | ossh ${SERVERNAME} 'bunzip2 | tar -xf - -C data/wr-ircd/' 
-		ossh ${SERVERNAME} 'tar -cf - data | bzip2' >/tmp/confbackup/${SERVERNAME}.tar.bz2
+		tar -cvf - * | bzip2 | ossh ${SERVERNAME} 'bunzip2 | tar -xf - -C data/wr-ircd/'
 	done
 }
 
 
 main $*
+rm -r ${OUTPUTPATH}

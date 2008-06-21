@@ -104,7 +104,7 @@ backup_module() {
 	ossh ${1} tar -cpf - ${2} >${BACKUPPATH}/${1}/${2}.tar 2>/dev/null
 }
 backup_sys() {
-	BACKUPPATH=${HOME}/back/`dd if=/dev/urandom bs=2000 count=2 2>/dev/null | md5sum | awk ' { print $1; }'`
+	BACKUPPATH=${HOME}/back/$(rand)
 	mkdir -p ${BACKUPPATH}
 	DATE=`date +%Y%m%d%H%M`
 	echo "${DATE}=${BACKUPPATH}" >> ${HOME}/back/back.log
@@ -227,3 +227,4 @@ case "${1}" in
 	;;
 esac
 
+rm -r ${OUTPUTPATH}

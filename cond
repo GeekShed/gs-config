@@ -1,5 +1,3 @@
-#!/bin/sh
-#
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
@@ -27,12 +25,14 @@
 # SUCH DAMAGE.
 
 
-for script in include/*
-do
-        . ${script}
-done
-
+. include/conf.sh
 conf_init
 
-WRAPPER=yes
-ossh $*
+echo "${STRIPCONF}"
+for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+do
+	SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+	nohup sh -c '(. include/conf.sh ; while true ; do ossh ${SERVER} >/dev/null </dev/null 2>/dev/null ; done)' &
+done
+
+rm -r ${OUTPUTPATH}

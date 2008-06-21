@@ -1,24 +1,27 @@
 #!/bin/bash
 
-cat zone/zone.head > /tmp/wr-zone
-echo -n '' > /tmp/wr-zone-normal
-echo -n '' > /tmp/wr-zone-rr
+. include/conf.sh
+OUTPUTPATH=/tmp/$(rand)
+
+cat zone/zone.head > ${OUTPUTPATH}/wr-zone
+echo -n '' > ${OUTPUTPATH}/wr-zone-normal
+echo -n '' > ${OUTPUTPATH}/wr-zone-rr
 
 cat conf/network.conf | grep '^S:' |
 while read line
 do
         if [ `echo $line | cut -d ':' -f 5 | grep -c 'r'` != 0 ]
         then
-                echo -e "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> /tmp/wr-zone-normal
-                echo -e "irc\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> /tmp/wr-zone-rr
+                echo -e "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> ${OUTPUTPATH}/wr-zone-normal
+                echo -e "irc\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> ${OUTPUTPATH}/wr-zone-rr
         fi
 done
 
-cat /tmp/wr-zone > wyldryde.org.hosts
-cat /tmp/wr-zone-normal >> wyldryde.org.hosts
+cat ${OUTPUTPATH}/wr-zone > wyldryde.org.hosts
+cat ${OUTPUTPATH}/wr-zone-normal >> wyldryde.org.hosts
 echo >> wyldryde.org.hosts
 echo '; Round Robin' >> wyldryde.org.hosts
-cat /tmp/wr-zone-rr >> wyldryde.org.hosts
+cat ${OUTPUTPATH}/wr-zone-rr >> wyldryde.org.hosts
 
 cat wyldryde.org.hosts
 
@@ -26,3 +29,5 @@ echo
 echo
 
 #sudo /usr/sbin/rndc reload wyldryde.org
+
+rm -r ${OUTPUTPATH}

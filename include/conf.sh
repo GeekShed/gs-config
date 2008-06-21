@@ -25,16 +25,28 @@
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
+
+rand ()
+{
+	case "$(uname)" in
+		FreeBSD)
+			dd if=/dev/urandom bs=512 count=16 2>/dev/null | md5 -q
+		;;
+		Linux)
+			dd if=/dev/urandom bs=512 count=16 2>/dev/null | md5sum -b - | awk '{ print $1 }'
+		;;
+	esac 
+}
 conf_init ()
 {
+	umask 027
         # set var's to use
         SCRIPTROOT=`pwd`
         CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
         SHELL=/bin/sh ; export SHELL
-        OUTPUTPATH=/tmp/cf-gen ; export OUTPUTPATH
+        OUTPUTPATH=/tmp/wr-area51/$(rand)  ; export OUTPUTPATH
         rm -rf ${OUTPUTPATH}
         mkdir -p ${OUTPUTPATH}
-        chmod 750 ${OUTPUTPATH}
         NAME=${CONFIG} ; export NAME
         # stripping out comments and whitespace:
         grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
@@ -43,6 +55,7 @@ conf_init ()
         NETWORK=`grep ^N ${STRIPCONF} | cut -d : -f 2` ; export NETWORK
 	DNSSUFFIX=`grep ^N ${STRIPCONF} | cut -d : -f 3`
 }
+
 ossh() {
         local SERVER=`grep ^S ${STRIPCONF} | grep "${1}"`
         shift
@@ -63,9 +76,9 @@ ossh() {
 	esac
 	if [ "${NOSSH}" != "1" ] ; then
 		if [ "${WRAPPER}" = "" ] ; then
-			ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+			ssh -o "ControlMaster auto" -o "ControlPath /tmp/%r-%h-%p" -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
 		else
-			ssh -p ${PORT} ${USERNAME}@${SSHIP} $*
+			ssh -o "ControlMaster auto" -o "ControlPath /tmp/%r-%h-%p" -p ${PORT} ${USERNAME}@${SSHIP} $*
 		fi
 	fi
 }
