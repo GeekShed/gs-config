@@ -74,7 +74,7 @@ prime_server() {
         cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./data'
 }
 push_key() {
-        ossh ${1} 'mkdir ~/.ssh/'
+        ossh ${1} 'if [ ! -d ~/.ssh/ ]; then mkdir ~/.ssh/; fi; chmod -R 0700 ~/.ssh/'
         cat ~/.ssh/id_rsa.pub | ossh ${1} 'cat > ~/.ssh/authorized_keys'
 }
 make_modules() {
