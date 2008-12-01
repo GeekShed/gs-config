@@ -73,6 +73,10 @@ prime_server() {
         ossh ${1} 'rm -rf data/ && mkdir -p data/logs/ && mkdir data/wr-ircd/ && touch data/logs/unreal.log && touch data/local.conf'
         cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./data'
 }
+push_key() {
+        ossh ${1} 'mkdir ~/.ssh/'
+        cat ~/.ssh/id_rsa.pub | ossh ${1} 'cat > ~/.ssh/authorized_keys'
+}
 make_modules() {
         ossh ${1} 'cd wr-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi'
 }
@@ -188,6 +192,7 @@ usage() {
 	echo -e "\t${COMMAND} dump"
 	echo -e "\t${COMMAND} rehash"
         echo -e "\t${COMMAND} prime"
+        echo -e "\t${COMMAND} prime"
         echo -e "\t${COMMAND} makemodules"
 }
 
@@ -198,6 +203,9 @@ case "${1}" in
 		check_config
 		push_server $2
 	;;
+        [pP][uU][sS][hH][kK][eE][yY])
+                push_key $2
+        ;;
 	[aA][dD][dD])
 		add_server $2
 	;;
