@@ -93,7 +93,11 @@ links_gen ()
 			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
 			echo -e "\t};" >> ${LINKFILE}
 		else
-			echo -e "\tclass leaf;" >> ${LINKFILE}
+			if [ "`grep ^R: ${STRIPCONF} | cut -d : -f 2`" = "${LINKNAME}" ]; then
+				echo -e "\tclass upsendq;" >> ${LINKFILE}
+			else
+				echo -e "\tclass leaf;" >> ${LINKFILE}
+			fi
 			echo -e "\thub *;" >> ${LINKFILE}
 			echo -e "\toptions {" >> ${LINKFILE}
 			if [ "${IAMTHEHUB}" = "1" ]; then
@@ -112,4 +116,3 @@ links_gen ()
 	done
 	echo -e "\t- ending ${LINKFILE}"
 }
-
