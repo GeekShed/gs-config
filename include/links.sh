@@ -89,7 +89,6 @@ links_gen ()
 			if [ "${ISMYHUB}" = "1" ]; then
 				echo -e "\t\tautoconnect;" >> ${LINKFILE}
 			fi
-			case ${OPTIONS} in *s*) echo -e "\t\tssl;" >> ${LINKFILE} ;;	esac
 			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
 			echo -e "\t};" >> ${LINKFILE}
 		else
@@ -107,12 +106,82 @@ links_gen ()
 					case ${OPTIONS} in *a*) echo -e "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
 				fi
 			fi
-			case ${OPTIONS} in *s*) echo -e "\t\tssl;" >> ${LINKFILE} ;;	esac
 			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
 			case ${OPTIONS} in *q*) echo -e "\t\tquarantine;" >> ${LINKFILE} ;;	esac
 			echo -e "\t};" >> ${LINKFILE}
 		fi
 		echo -e "};" >> ${LINKFILE}
+		
+		# For SSL Servers
+		if [ `echo ${OPTIONS} | grep -c 's'` -eq 1 ]; then
+			echo -e "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
+			echo -e "\tusername *;" >> ${LINKFILE}
+			echo -e "\thostname ${LINKIP};" >> ${LINKFILE}
+			echo -e "\tbind-ip ${BINDIP};" >> ${LINKFILE}
+			echo -e "\tport 4401;" >> ${LINKFILE}
+			echo -e "\tpassword-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
+			echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { md5; };" >> ${LINKFILE}
+			ISAHUB=0
+			ISMYHUB=0
+			IAMTHEHUB=0
+			if [ "`grep ^H:${REGION} ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
+				IAMTHEHUB=1
+			fi
+			for HLINES in `grep ^H ${STRIPCONF}`
+			do
+				if [ "`echo ${HLINES} | cut -d : -f 4`" = "${LINKNAME}" ]; then
+					ISAHUB=1
+					if [ "`echo ${HLINES} | cut -d : -f 2`" = "${MYREGION}" ]; then
+						#this server is the hub for HUBREGION, and MYREGION is HUBREGION so this is my hub
+						ISMYHUB=1
+					fi
+				fi
+			done
+			if [ "${ISAHUB}" = "1" ]; then
+				if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${LINKNAME}" ]; then
+					#this server is the root hub
+					#echo -e "\tclass roothub;" >> ${LINKFILE}
+					#instead, lets treat this as a normal hub for now
+					#so we can use the maxclients=1 to prevent a leaf bridging hubs
+					echo -e "\tclass hub;" >> ${LINKFILE}
+				else
+					if [ "${IAMTHEROOTHUB}" = "1" ]; then
+						#i am the root hub, allow multiple hubs to connect to me
+						echo -e "\tclass servers;" >> ${LINKFILE}
+					else
+						echo -e "\tclass hub;" >> ${LINKFILE}
+					fi
+				fi
+				echo -e "\thub *;" >> ${LINKFILE}
+				echo -e "\toptions {" >> ${LINKFILE}
+				echo -e "\t\tssl;" >> ${LINKFILE}
+				if [ "${ISMYHUB}" = "1" ]; then
+					echo -e "\t\tautoconnect;" >> ${LINKFILE}
+				fi
+				case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
+				echo -e "\t};" >> ${LINKFILE}
+			else
+				if [ "`grep ^R: ${STRIPCONF} | cut -d : -f 2`" = "${LINKNAME}" ]; then
+					echo -e "\tclass upsendq;" >> ${LINKFILE}
+				else
+					echo -e "\tclass leaf;" >> ${LINKFILE}
+				fi
+				echo -e "\thub *;" >> ${LINKFILE}
+				echo -e "\toptions {" >> ${LINKFILE}
+				echo -e "\t\tssl;" >> ${LINKFILE}
+				if [ "${IAMTHEHUB}" = "1" ]; then
+					if [ "${REGION}" = "${MYREGION}" ]; then
+						#i am the hub for this region
+						#reverse autoconnect
+						case ${OPTIONS} in *a*) echo -e "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
+					fi
+				fi
+				case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
+				case ${OPTIONS} in *q*) echo -e "\t\tquarantine;" >> ${LINKFILE} ;;	esac
+				echo -e "\t};" >> ${LINKFILE}
+			fi
+			echo -e "};" >> ${LINKFILE}
+		fi
 	done
 	echo -e "\t- ending ${LINKFILE}"
 }
