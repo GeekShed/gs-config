@@ -86,9 +86,6 @@ links_gen ()
 			fi
 			echo -e "\thub *;" >> ${LINKFILE}
 			echo -e "\toptions {" >> ${LINKFILE}
-			if [ "${ISMYHUB}" = "1" ]; then
-				echo -e "\t\tautoconnect;" >> ${LINKFILE}
-			fi
 			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
 			echo -e "\t};" >> ${LINKFILE}
 		else
@@ -99,13 +96,6 @@ links_gen ()
 			fi
 			echo -e "\thub *;" >> ${LINKFILE}
 			echo -e "\toptions {" >> ${LINKFILE}
-			if [ "${IAMTHEHUB}" = "1" ]; then
-				if [ "${REGION}" = "${MYREGION}" ]; then
-					#i am the hub for this region
-					#reverse autoconnect
-					case ${OPTIONS} in *a*) echo -e "\t\tautoconnect;" >> ${LINKFILE} ;;	esac
-				fi
-			fi
 			case ${OPTIONS} in *z*) echo -e "\t\tzip;" >> ${LINKFILE} ;;	esac
 			case ${OPTIONS} in *q*) echo -e "\t\tquarantine;" >> ${LINKFILE} ;;	esac
 			echo -e "\t};" >> ${LINKFILE}
