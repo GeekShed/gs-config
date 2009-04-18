@@ -76,9 +76,9 @@ ossh() {
 	esac
 	if [ "${NOSSH}" != "1" ] ; then
 		if [ "${WRAPPER}" = "" ] ; then
-			ssh -o "ControlMaster auto" -o "ControlPath /tmp/%r-%h-%p" -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
+			ssh -o "ControlMaster auto" -o "ConnectionTimeout 10" -o "ControlPath /tmp/%r-%h-%p" -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
 		else
-			ssh -o "ControlMaster auto" -o "ControlPath /tmp/%r-%h-%p" -p ${PORT} ${USERNAME}@${SSHIP} $*
+			ssh -o "ControlMaster auto" -o "ConnectionTimeout 10" -o "ControlPath /tmp/%r-%h-%p" -p ${PORT} ${USERNAME}@${SSHIP} $*
 		fi
 	fi
 }
