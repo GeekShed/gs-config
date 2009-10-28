@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Portions Copyright (c) 2005-2007  WyldRyde IRC Network
 # Copyright (c) 2009 GeekShed Ltd.
 # All rights reserved.

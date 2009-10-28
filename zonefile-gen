@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 . include/conf.sh
 OUTPUTPATH=/tmp/$(rand)
