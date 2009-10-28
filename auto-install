@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
@@ -70,28 +70,30 @@ create_config() {
 	
 }
 prime_server() {
-        ossh ${1} 'rm -rf data/ && mkdir -p data/logs/ && mkdir data/wr-ircd/ && touch data/logs/unreal.log && touch data/local.conf'
-        cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./data'
+        ossh ${1} 'rm -rf gs-data/ && mkdir -p gs-data/logs/ && mkdir gs-data/gs-ircd/ && touch gs-data/logs/unreal.log && touch gs-data/local.conf'
+        cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./gs-data'
 }
 push_key() {
         ossh ${1} 'if [ ! -d ~/.ssh/ ]; then mkdir ~/.ssh/; fi; chmod -R 0700 ~/.ssh/'
         cat ~/.ssh/id_rsa.pub | ossh ${1} 'cat >> ~/.ssh/authorized_keys'
 }
 make_modules() {
-        ossh ${1} 'cd wr-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi'
+        ossh ${1} 'cd gs-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi'
 }
 push_bins() {
-	cd /tmp/svn && tar -cpvf - wr-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
-	ossh ${1} 'cd wr-ircd && ./configure --enable-hub  --enable-ssl --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/wr-ircd  --with-spath=`pwd`/wr-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
-	ossh ${1} 'cd wr-ircd && cd . && make clean && make'
+	cd /tmp/svn && tar -cpvf - gs-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
+	ossh ${1} 'cd gs-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/gs-ircd  --with-spath=`pwd`/gs-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
+	ossh ${1} 'cd gs-ircd && cd . && make clean && make'
+	make_modules ${1}
 	mkdir -p /tmp/binbackup/
-	ossh ${1} 'tar -cpf - wr-ircd | bzip2' > /tmp/binbackup/${1}.tar.bz2
+	ossh ${1} 'tar -cpf - gs-ircd | bzip2' > /tmp/binbackup/${1}.tar.bz2
 }
 push_server() {
 	rm -rf /tmp/svn
 	mkdir -p /tmp/svn
 	cd /tmp/svn
-	svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
+	#svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
+	svn checkout http://gs-ircd.googlecode.com/svn/trunk/ gs-ircd
 	if [ "${1}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 		do
@@ -116,14 +118,12 @@ backup_sys() {
         do
             SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 	    mkdir -p ${BACKUPPATH}/${SERVER}
-            backup_module ${SERVER} wr-ircd
-            backup_module ${SERVER} wr-area51
+            backup_module ${SERVER} gs-ircd
+            backup_module ${SERVER} gs-config
             backup_module ${SERVER} .ssh
             backup_module ${SERVER} bopm
             backup_module ${SERVER} services
-            backup_module ${SERVER} data
-            backup_module ${SERVER} Unreal3.2.x
-            backup_module ${SERVER} unreal
+            backup_module ${SERVER} gs-data
         done
 	tar -cf ${BACKUPPATH}/home.tar -x back /home/wamphyre/* /home/wamphyre/.*
 	tar -cf ${BACKUPPATH}/local.tar /usr/local/*
@@ -135,7 +135,7 @@ ping() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} 'grep MAXCONNECTIONS wr-ircd/config.log | head -n 1'` "
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} 'grep MAXCONNECTIONS gs-ircd/config.log | head -n 1'` "
 
 done
 }
@@ -179,8 +179,8 @@ rehash_list() {
 }
 
 add_server() {
-	ossh ${1} mkdir -p data/wr-ircd
-	ossh ${1} mkdir -p wr-ircd
+	ossh ${1} mkdir -p gs-data/gs-ircd
+	ossh ${1} mkdir -p gs-ircd
 }
 usage() {
 	echo "usage:"

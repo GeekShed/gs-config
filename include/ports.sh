@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
@@ -33,7 +34,7 @@ links_gen ()
 	for SERVICESSERVER in `grep ^V ${STRIPCONF}`
 	do
 		SRVNAME=`echo ${SERVICESSERVER} | cut -f 2 -d :`
-		echo -e "\"${SRVNAME}\";" >> ${LINKFILE}
+		echo -e "\t\"${SRVNAME}\";" >> ${LINKFILE}
 	done
 	echo -e "};" >> ${LINKFILE}
 	IAMTHEROOTHUB=0
@@ -52,7 +53,7 @@ links_gen ()
 		echo -e "\tbind-ip ${BINDIP};" >> ${LINKFILE}
 		echo -e "\tport 4400;" >> ${LINKFILE}
 		echo -e "\tpassword-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
-		echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { md5; };" >> ${LINKFILE}
+		echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
 		ISAHUB=0
 		ISMYHUB=0
 		IAMTHEHUB=0
@@ -110,7 +111,7 @@ links_gen ()
 			echo -e "\tbind-ip ${BINDIP};" >> ${LINKFILE}
 			echo -e "\tport 4401;" >> ${LINKFILE}
 			echo -e "\tpassword-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
-			echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { md5; };" >> ${LINKFILE}
+			echo -e "\tpassword-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
 			ISAHUB=0
 			ISMYHUB=0
 			IAMTHEHUB=0

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
@@ -44,7 +44,7 @@ conf_init ()
         SCRIPTROOT=`pwd`
         CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
         SHELL=/bin/sh ; export SHELL
-        OUTPUTPATH=/tmp/wr-area51/$(rand)  ; export OUTPUTPATH
+        OUTPUTPATH=/tmp/gs-config/$(rand)  ; export OUTPUTPATH
         rm -rf ${OUTPUTPATH}
         mkdir -p ${OUTPUTPATH}
         NAME=${CONFIG} ; export NAME

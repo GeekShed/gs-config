@@ -3,31 +3,32 @@
 . include/conf.sh
 OUTPUTPATH=/tmp/$(rand)
 
-cat zone/zone.head > ${OUTPUTPATH}/wr-zone
-echo -n '' > ${OUTPUTPATH}/wr-zone-normal
-echo -n '' > ${OUTPUTPATH}/wr-zone-rr
+cat zone/zone.head > ${OUTPUTPATH}/gs-zone
+mkdir ${OUTPUTPATH}
+echo -n '' > ${OUTPUTPATH}/gs-zone-normal
+echo -n '' > ${OUTPUTPATH}/gs-zone-rr
 
 cat conf/network.conf | grep '^S:' |
 while read line
 do
         if [ `echo $line | cut -d ':' -f 5 | grep -c 'r'` != 0 ]
         then
-                echo -e "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> ${OUTPUTPATH}/wr-zone-normal
-                echo -e "irc\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> ${OUTPUTPATH}/wr-zone-rr
+                echo -e "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-normal
+                echo -e "irc\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-rr
         fi
 done
 
-cat ${OUTPUTPATH}/wr-zone > wyldryde.org.hosts
-cat ${OUTPUTPATH}/wr-zone-normal >> wyldryde.org.hosts
-echo >> wyldryde.org.hosts
-echo '; Round Robin' >> wyldryde.org.hosts
-cat ${OUTPUTPATH}/wr-zone-rr >> wyldryde.org.hosts
+cat ${OUTPUTPATH}/gs-zone > geekshed.net.hosts
+cat ${OUTPUTPATH}/gs-zone-normal >> geekshed.net.hosts
+echo >> geekshed.net.hosts
+echo '; Round Robin' >> geekshed.net.hosts
+cat ${OUTPUTPATH}/gs-zone-rr >> geekshed.net.hosts
 
-cat wyldryde.org.hosts
+cat geekshed.net.hosts
 
 echo
 echo
 
-#sudo /usr/sbin/rndc reload wyldryde.org
+#sudo /usr/sbin/rndc reload geekshed.net
 
-rm -r ${OUTPUTPATH}
+rm -rf ${OUTPUTPATH}

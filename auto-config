@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright (c) 2005-2007  WyldRyde IRC Network
 # All rights reserved.
 #
@@ -50,9 +50,9 @@ main () {
 					opers) opers_gen ;;
 				esac
 		done
-		cp -Rp ${SCRIPTROOT}/conf/wyldryde/global/* ${CONFPATH}
+		cp -Rp ${SCRIPTROOT}/conf/geekshed/global/* ${CONFPATH}
 		cd ${CONFPATH} 
-		tar -cvf - * | bzip2 | ossh ${SERVERNAME} 'bunzip2 | tar -xf - -C data/wr-ircd/'
+		tar -cvf - * | bzip2 | ossh ${SERVERNAME} 'bunzip2 | tar -xf - -C gs-data/gs-ircd/'
 	done
 }
 
