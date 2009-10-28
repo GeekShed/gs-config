@@ -13,8 +13,8 @@ while read line
 do
         if [ `echo $line | cut -d ':' -f 5 | grep -c 'r'` != 0 ]
         then
-                echo -e "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-normal
-                echo -e "irc\tIN\tA\t`echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-rr
+                echo "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`    IN    A    `echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-normal
+                echo "irc    IN    A    `echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-rr
         fi
 done
 

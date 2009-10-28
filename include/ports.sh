@@ -29,7 +29,7 @@
 ports_gen ()
 {
 	PORTSFILE=${CONFPATH}/ports.conf
-	echo -e "\t- starting ${PORTSFILE}"
+	echo "    - starting ${PORTSFILE}"
 	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
 		SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
@@ -59,21 +59,21 @@ ports_gen ()
 			esac
 			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
 				if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
-					echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 				else
-					echo -e "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 				fi
 				if [ "${OPTIONS}" != "" ] ; then
-					echo -e "\toptions {" >> ${PORTSFILE}
-					case ${OPTIONS} in *c*) echo -e "\t\tclientsonly;" >> ${PORTSFILE} ;;	esac
-					case ${OPTIONS} in *s*) echo -e "\t\tserversonly;" >> ${PORTSFILE} ;;	esac
-					case ${OPTIONS} in *l*) echo -e "\t\tssl;" >> ${PORTSFILE} ;;		esac
-					echo -e "\t};" >> ${PORTSFILE}
+					echo "    options {" >> ${PORTSFILE}
+					case ${OPTIONS} in *c*) echo "        clientsonly;" >> ${PORTSFILE} ;;	esac
+					case ${OPTIONS} in *s*) echo "        serversonly;" >> ${PORTSFILE} ;;	esac
+					case ${OPTIONS} in *l*) echo "        ssl;" >> ${PORTSFILE} ;;		esac
+					echo "    };" >> ${PORTSFILE}
 				fi
-				echo -e "};" >> ${PORTSFILE}
+				echo "};" >> ${PORTSFILE}
 			fi
 		done
 
 	done
-	echo -e "\t- ending ${PORTSFILE}"
+	echo "    - ending ${PORTSFILE}"
 }

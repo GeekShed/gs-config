@@ -28,114 +28,114 @@
 
 oper_block () 
 {
-						echo -e "oper ${OSNAME} {" >>${OPERFILE}
-						echo -e "\t/* ${ONICK} - ${OLNAME} - ${OEMAIL} */" >> ${OPERFILE}
-						echo -e "\tclass opers;" >> ${OPERFILE}
-						echo -e "\tfrom {" >> ${OPERFILE}
+						echo "oper ${OSNAME} {" >>${OPERFILE}
+						echo "    /* ${ONICK} - ${OLNAME} - ${OEMAIL} */" >> ${OPERFILE}
+						echo "    class opers;" >> ${OPERFILE}
+						echo "    from {" >> ${OPERFILE}
 						for UHOSTS in `echo ${OHOSTS} | sed s/_/\ /g`
 						do
-							echo -e "\t\tuserhost \"${UHOSTS}\";" >> ${OPERFILE}
+							echo "        userhost \"${UHOSTS}\";" >> ${OPERFILE}
 						done
-						echo -e "\t};" >> ${OPERFILE}
+						echo "    };" >> ${OPERFILE}
 						case ${OFLAGS} in
 							*m*)
-								echo -e "\tpassword \"${OPHASH}\" { md5; }; " >> ${OPERFILE}
+								echo "    password \"${OPHASH}\" { md5; }; " >> ${OPERFILE}
 							;;
 							*)
-								echo -e "\tpassword \"${OPHASH}\" { sha1; }; " >> ${OPERFILE}
+								echo "    password \"${OPHASH}\" { sha1; }; " >> ${OPERFILE}
 						esac
-						echo -e "\tflags {"  >> ${OPERFILE}
+						echo "    flags {"  >> ${OPERFILE}
 						OPACCESS=0
 						case ${OFLAGS} in
 							*[rg]*)
-								echo -e "\t\tnetadmin;" >> ${OPERFILE}
+								echo "        netadmin;" >> ${OPERFILE}
 								OPACCESS=3
 								OPACCESS=3
 							;;
 							*a*)
-								echo -e "\t\tservices-admin;" >> ${OPERFILE}
+								echo "        services-admin;" >> ${OPERFILE}
 								OPACCESS=3
 							;;
 							*)
 								case ${OTYPE} in
 									*O*)
-										echo -e "\t\tlocal;" >> ${OPERFILE}
+										echo "        local;" >> ${OPERFILE}
 										OPACCESS=1
 									;;
 									*o*)
-										echo -e "\t\tglobal;" >> ${OPERFILE}
+										echo "        global;" >> ${OPERFILE}
 										OPACCESS=2
 									;;
 									*C*)
-										echo -e "\t\tcoadmin;" >> ${OPERFILE}
+										echo "        coadmin;" >> ${OPERFILE}
 										OPACCESS=3
 									;;
 									*A*)
-										echo -e "\t\tadmin;" >> ${OPERFILE}
+										echo "        admin;" >> ${OPERFILE}
 										OPACCESS=3
 									;;
 									*a*)
-										echo -e "\t\tservices-admin;" >> ${OPERFILE}
+										echo "        services-admin;" >> ${OPERFILE}
 										OPACCESS=3
 									;;
 									*N*)
-										echo -e "\t\tnetadmin;" >> ${OPERFILE}
+										echo "        netadmin;" >> ${OPERFILE}
 										OPACCESS=3
 									;;
 								esac
 							;;
 						esac
 						if [ "${OPACCESS}" -ge "1" ]; then
-							echo -e "\t\tcan_zline;" >> ${OPERFILE}
-							echo -e "\t\tget_umodew;" >> ${OPERFILE}
-							echo -e "\t\thelpop;" >> ${OPERFILE}
-							echo -e "\t\tget_host;" >> ${OPERFILE}
-							echo -e "\t\tcan_rehash;" >> ${OPERFILE}
+							echo "        can_zline;" >> ${OPERFILE}
+							echo "        get_umodew;" >> ${OPERFILE}
+							echo "        helpop;" >> ${OPERFILE}
+							echo "        get_host;" >> ${OPERFILE}
+							echo "        can_rehash;" >> ${OPERFILE}
 						fi
 						if [ "${OPACCESS}" -ge "2" ]; then
-							echo -e "\t\tcan_gkline;" >> ${OPERFILE}
-							echo -e "\t\tcan_restart;" >> ${OPERFILE}
-							echo -e "\t\tcan_override;" >> ${OPERFILE}
-							echo -e "\t\tcan_gzline;" >> ${OPERFILE}
+							echo "        can_gkline;" >> ${OPERFILE}
+							echo "        can_restart;" >> ${OPERFILE}
+							echo "        can_override;" >> ${OPERFILE}
+							echo "        can_gzline;" >> ${OPERFILE}
 						fi
 						if [ "${OPACCESS}" -ge "3" ]; then
-							echo -e "\t\tcan_die;" >> ${OPERFILE}
+							echo "        can_die;" >> ${OPERFILE}
 						fi
-						echo -e "\t};" >> ${OPERFILE}
-						echo -e "\tsnomask cefjknqvFGT;" >> ${OPERFILE}
+						echo "    };" >> ${OPERFILE}
+						echo "    snomask cefjknqvFGT;" >> ${OPERFILE}
 						if [ "${OWHOIS}" != "" ] ; then
-							echo -e "\tswhois \"${OWHOIS}\";" >> ${OPERFILE}
+							echo "    swhois \"${OWHOIS}\";" >> ${OPERFILE}
 						fi
-				    		echo -e "};" >> ${OPERFILE}
+				    		echo "};" >> ${OPERFILE}
 						case ${OFLAGS} in
 							*b*)
 							;;
 							*)
-								echo -e "admin {" >> ${OPERFILE}
+								echo "admin {" >> ${OPERFILE}
 								case ${OFLAGS} in
 									*[r]*)
-										echo -e "\t\"Root Administrator: ${ONICK}\";" >> ${OPERFILE}
+										echo "    \"Root Administrator: ${ONICK}\";" >> ${OPERFILE}
 									;;
 									*[g]*)
-										echo -e "\t\"Global Administrator: ${ONICK}\";" >> ${OPERFILE}
+										echo "    \"Global Administrator: ${ONICK}\";" >> ${OPERFILE}
 									;;
 									*[a]*)
-										echo -e "\t\"Services Administrator: ${ONICK}\";" >> ${OPERFILE}
+										echo "    \"Services Administrator: ${ONICK}\";" >> ${OPERFILE}
 									;;
 									*)
 										case ${OTYPE} in
 											*[oO]*)
-												echo -e "\t\"Server Operator: ${ONICK}\";" >> ${OPERFILE}
+												echo "    \"Server Operator: ${ONICK}\";" >> ${OPERFILE}
 											;;
 											*)
-												echo -e "\t\"Server Administrator: ${ONICK}\";" >> ${OPERFILE}
+												echo "    \"Server Administrator: ${ONICK}\";" >> ${OPERFILE}
 											;;
 										esac
 									;;
 								esac
 
-								echo -e "\t\"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
-								echo -e "};" >> ${OPERFILE}
+								echo "    \"- ${OLNAME} <${OEMAIL}>\";" >> ${OPERFILE}
+								echo "};" >> ${OPERFILE}
 							;;
 						esac
 						
@@ -144,15 +144,15 @@ oper_block ()
 							*[rg]*)
 								for UEXCEPTS in `echo ${OEXCEPTS} | sed s/_/\ /g`
 								do
-									echo -e "except tkl {" >> ${OPERFILE}
-									echo -e "\tmask ${UEXCEPTS};" >> ${OPERFILE}
-									echo -e "\ttype { " >> ${OPERFILE}
-									echo -e "\t\tgline;" >> ${OPERFILE}
-									echo -e "\t\tgzline;" >> ${OPERFILE}
-									echo -e "\t\tshun;" >> ${OPERFILE}
-									echo -e "\t\tqline;" >> ${OPERFILE}
-									echo -e "\t};" >> ${OPERFILE}
-									echo -e "};" >> ${OPERFILE}
+									echo "except tkl {" >> ${OPERFILE}
+									echo "    mask ${UEXCEPTS};" >> ${OPERFILE}
+									echo "    type { " >> ${OPERFILE}
+									echo "        gline;" >> ${OPERFILE}
+									echo "        gzline;" >> ${OPERFILE}
+									echo "        shun;" >> ${OPERFILE}
+									echo "        qline;" >> ${OPERFILE}
+									echo "    };" >> ${OPERFILE}
+									echo "};" >> ${OPERFILE}
 								done
 							;;
 							*)
@@ -163,7 +163,7 @@ oper_block ()
 opers_gen ()
 {
 	OPERFILE=${CONFPATH}/olines.conf
-	echo -e "\t- starting ${OPERFILE}"
+	echo "    - starting ${OPERFILE}"
 	for OLINES in `grep ^U ${STRIPCONF}`
 	do
 		OSNAME=`echo ${OLINES} | cut -d : -f 2`
@@ -201,5 +201,5 @@ opers_gen ()
 			;;
 		esac 
 	done
-	echo -e "\t- ending ${OPERFILE}"
+	echo "    - ending ${OPERFILE}"
 }

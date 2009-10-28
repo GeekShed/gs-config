@@ -28,24 +28,24 @@
 server_gen ()
 {
 	SERVERFILE=${CONFPATH}/server.conf
-	echo -e "\t- starting ${SERVERFILE}"
+	echo "    - starting ${SERVERFILE}"
 	SLINE=`grep ^S ${STRIPCONF} | grep ${SERVERNAME}`
 	NAME=${SERVERNAME}.${DNSSUFFIX}
 	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
 	PASS=`echo ${SLINE} | cut -d : -f 7`
 	INFO=`echo ${SLINE} | cut -d : -f 11 | sed s/\_/\ /g`
-	echo -e "me {" >>${SERVERFILE}
-	echo -e "\tname \"${NAME}\";" >>${SERVERFILE}
-	echo -e "\tinfo \"${INFO}\";" >>${SERVERFILE}
-	echo -e "\tnumeric ${NUMERIC};" >>${SERVERFILE}
-	echo -e "};" >>${SERVERFILE}
-	echo -e "drpass {" >>${SERVERFILE}
-	echo -e "\trestart \"${PASS}\" { sha1; };" >>${SERVERFILE}
-	echo -e "\tdie \"${PASS}\" { sha1; };" >>${SERVERFILE}
-	echo -e "};" >>${SERVERFILE}
-	echo -e "admin {" >>${SERVERFILE}
-	echo -e "\t\"${NETWORK} IRC Network\";" >>${SERVERFILE}
-	echo -e "};" >>${SERVERFILE}
-	echo -e "\t- ending ${SERVERFILE}"
+	echo "me {" >>${SERVERFILE}
+	echo "    name \"${NAME}\";" >>${SERVERFILE}
+	echo "    info \"${INFO}\";" >>${SERVERFILE}
+	echo "    numeric ${NUMERIC};" >>${SERVERFILE}
+	echo "};" >>${SERVERFILE}
+	echo "drpass {" >>${SERVERFILE}
+	echo "    restart \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "    die \"${PASS}\" { sha1; };" >>${SERVERFILE}
+	echo "};" >>${SERVERFILE}
+	echo "admin {" >>${SERVERFILE}
+	echo "    \"${NETWORK} IRC Network\";" >>${SERVERFILE}
+	echo "};" >>${SERVERFILE}
+	echo "    - ending ${SERVERFILE}"
 }
 

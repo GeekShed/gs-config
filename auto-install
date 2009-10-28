@@ -144,7 +144,7 @@ dump_list() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo -e ${SERVER}
+		echo ${SERVER}
 		for USERS in `grep ^U ${STRIPCONF}`
 		do
 			case `echo ${USERS} | cut -d : -f 5` in
@@ -162,7 +162,7 @@ dump_list() {
 				for servern in `echo ${USERS} | cut -d : -f 6 | sed s/\-/\ /g`
 				do
 					if [ "` echo ${servern} | cut -d @ -f 2`" = "${SERVER}" ] ; then
-						echo -e "\t`echo ${servern} | cut -d @ -f 1`=`echo ${USERS} | cut -d : -f 3 | sed s/\_/\ /g` <`echo ${USERS} | cut -d : -f 2`>"
+						echo "    `echo ${servern} | cut -d @ -f 1`=`echo ${USERS} | cut -d : -f 3 | sed s/\_/\ /g` <`echo ${USERS} | cut -d : -f 2`>"
 					fi
 				done
 			fi
@@ -185,16 +185,16 @@ add_server() {
 }
 usage() {
 	echo "usage:"
-	echo -e "\t${COMMAND} push"
-	echo -e "\t${COMMAND} create"
-	echo -e "\t${COMMAND} add"
-	echo -e "\t${COMMAND} backup"
-	echo -e "\t${COMMAND} ping"
-	echo -e "\t${COMMAND} dump"
-	echo -e "\t${COMMAND} rehash"
-        echo -e "\t${COMMAND} prime"
-        echo -e "\t${COMMAND} prime"
-        echo -e "\t${COMMAND} makemodules"
+	echo "    ${COMMAND} push"
+	echo "    ${COMMAND} create"
+	echo "    ${COMMAND} add"
+	echo "    ${COMMAND} backup"
+	echo "    ${COMMAND} ping"
+	echo "    ${COMMAND} dump"
+	echo "    ${COMMAND} rehash"
+        echo "    ${COMMAND} prime"
+        echo "    ${COMMAND} prime"
+        echo "    ${COMMAND} makemodules"
 }
 
 
