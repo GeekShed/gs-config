@@ -112,7 +112,7 @@ links_gen ()
 			echo "    username *;" >> ${LINKFILE}
 			echo "    hostname ${LINKIP};" >> ${LINKFILE}
 			echo "    bind-ip ${BINDIP};" >> ${LINKFILE}
-			echo "    port $(DEFSSLSERVERPORT};" >> ${LINKFILE}
+			echo "    port ${DEFSSLSERVERPORT};" >> ${LINKFILE}
 			echo "    password-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
 			echo "    password-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
 			ISAHUB=0
