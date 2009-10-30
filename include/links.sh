@@ -29,7 +29,7 @@ links_gen ()
 {
 	LINKFILE=${CONFPATH}/links.conf
 	echo "    - starting ${LINKFILE}"
-	DEFSERVERPORT=$(grep ^N ${STRIPCONF} | cut -d : -f 7)"
+	DEFSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 7)"
 	MYREGION=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 8`
 	BINDIP=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
 	echo "ulines {" >> ${LINKFILE}
