@@ -3,26 +3,26 @@
 . include/conf.sh
 OUTPUTPATH=/tmp/$(rand)
 
-cat zone/zone.head > ${OUTPUTPATH}/gs-zone
+cat zone/zone.head > ${OUTPUTPATH}/${NETSHORTNAME}-zone
 mkdir ${OUTPUTPATH}
-echo -n '' > ${OUTPUTPATH}/gs-zone-normal
-echo -n '' > ${OUTPUTPATH}/gs-zone-rr
+echo -n '' > ${OUTPUTPATH}/${NETSHORTNAME}-zone-normal
+echo -n '' > ${OUTPUTPATH}/${NETSHORTNAME}-zone-rr
 
 cat conf/network.conf | grep '^S:' |
 while read line
 do
         if [ `echo $line | cut -d ':' -f 5 | grep -c 'r'` != 0 ]
         then
-                echo "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`    IN    A    `echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-normal
-                echo "irc    IN    A    `echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> ${OUTPUTPATH}/gs-zone-rr
+                echo "`echo $line | cut -d ':' -f 2 | tr -d \"\n\"`    IN    A    `echo $line | cut -d ':' -f 3 | tr -d \"\n\"`" >> ${OUTPUTPATH}/${NETSHORTNAME}-zone-normal
+                echo "irc    IN    A    `echo $line | cut -d ':' -f 3 | tr -d \"\n\"` ; `echo $line | cut -d ':' -f 2 | tr -d \"\n\"`" >> ${OUTPUTPATH}/${NETSHORTNAME}-zone-rr
         fi
 done
 
-cat ${OUTPUTPATH}/gs-zone > geekshed.net.hosts
-cat ${OUTPUTPATH}/gs-zone-normal >> geekshed.net.hosts
+cat ${OUTPUTPATH}/${NETSHORTNAME}-zone > geekshed.net.hosts
+cat ${OUTPUTPATH}/${NETSHORTNAME}-zone-normal >> geekshed.net.hosts
 echo >> geekshed.net.hosts
 echo '; Round Robin' >> geekshed.net.hosts
-cat ${OUTPUTPATH}/gs-zone-rr >> geekshed.net.hosts
+cat ${OUTPUTPATH}/${NETSHORTNAME}-zone-rr >> geekshed.net.hosts
 
 cat geekshed.net.hosts
 

@@ -45,7 +45,9 @@ conf_init ()
         SCRIPTROOT=`pwd`
         CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
         SHELL=/bin/sh ; export SHELL
-        OUTPUTPATH=/tmp/gs-config/$(rand)  ; export OUTPUTPATH
+        NETWORK=`grep ^N ${CONFIG} | cut -d : -f 2` ; export NETWORK
+        NETSHORTNAME=`grep ^N ${CONFIG} | cut -d : -f 6` ; export NETSHORTNAME
+        OUTPUTPATH=/tmp/${NETSHORTNAME}-config/$(rand)  ; export OUTPUTPATH
         rm -rf ${OUTPUTPATH}
         mkdir -p ${OUTPUTPATH}
         NAME=${CONFIG} ; export NAME
@@ -53,7 +55,6 @@ conf_init ()
         grep -v ^# ${NAME} | grep -v ^$ | cut -f 1 -d \# > ${OUTPUTPATH}/network.conf
         STRIPCONF=${OUTPUTPATH}/network.conf ; export STRIPCONF
         mkdir -p ${OUTPUTPATH}/conf
-        NETWORK=`grep ^N ${STRIPCONF} | cut -d : -f 2` ; export NETWORK
 	DNSSUFFIX=`grep ^N ${STRIPCONF} | cut -d : -f 3`
 }
 

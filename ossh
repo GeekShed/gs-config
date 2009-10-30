@@ -28,7 +28,9 @@
 # SUCH DAMAGE.
 
 
-cd /home/wamphyre/gs-config/
+if [ -d ${GSCONFIGROOT} ] ; then
+	cd "${GSCONFIGROOT}"
+fi
 
 for script in include/*
 do
