@@ -96,6 +96,7 @@ push_bins() {
 		;;
 	esac
 	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && cd . && make clean && make"
+	ossh ${SERVER} "sed s_%%DATADIR%%_${NETSHORTNAME}-data_g ${NETSHORTNAME}-ircd/unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > ${NETSHORTNAME}-ircd/unrealircd.conf"
 	make_modules ${SERVER}
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} 'tar -cpf - ${NETSHORTNAME}-ircd | bzip2' > /tmp/binbackup/${SERVER}.tar.bz2
