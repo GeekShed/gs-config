@@ -83,16 +83,18 @@ make_modules() {
 }
 push_bins() {
 	SERVER="$( echo ${1} | cut -d : -f 2)"
+	SERVERPWD="$(ossh ${SERVER} pwd)"
 	FLAGS="$( echo ${1} | cut -d : -f 5)"
 	cd /tmp/svn && tar -cpvf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
+	echo "${SERVERPWD}"
 	case "${FLAGS}" in
 		*t*)
 
-			ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/${NETSHORTNAME}-ircd  --with-spath=`pwd`/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
+			ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 		;;
 		*)
 
-			ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/${NETSHORTNAME}-ircd  --with-spath=`pwd`/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
+			ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 		;;
 	esac
 	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && cd . && make clean && make"
