@@ -29,7 +29,9 @@
 
 
 if [ -d ${GSCONFIGROOT} ] ; then
-	cd "${GSCONFIGROOT}"
+	if [ ! -d `pwd`/include ] ; then
+		cd "${GSCONFIGROOT}"
+	fi
 fi
 
 for script in include/*
