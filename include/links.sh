@@ -30,6 +30,7 @@ links_gen ()
 	LINKFILE=${CONFPATH}/links.conf
 	echo "    - starting ${LINKFILE}"
 	DEFSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 7)"
+	DEFSSLSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 8)"
 	MYREGION=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 8`
 	BINDIP=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
 	echo "ulines {" >> ${LINKFILE}
@@ -111,7 +112,7 @@ links_gen ()
 			echo "    username *;" >> ${LINKFILE}
 			echo "    hostname ${LINKIP};" >> ${LINKFILE}
 			echo "    bind-ip ${BINDIP};" >> ${LINKFILE}
-			echo "    port 4401;" >> ${LINKFILE}
+			echo "    port $(DEFSSLSERVERPORT};" >> ${LINKFILE}
 			echo "    password-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
 			echo "    password-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
 			ISAHUB=0
