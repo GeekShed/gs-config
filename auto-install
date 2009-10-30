@@ -71,15 +71,15 @@ create_config() {
 	
 }
 prime_server() {
-        ossh ${1} 'rm -rf ${NETSHORTNAME}-data/ && mkdir -p ${NETSHORTNAME}-data/logs/ && mkdir ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/ && touch ${NETSHORTNAME}-data/logs/unreal.log && touch ${NETSHORTNAME}-data/local.conf'
-        cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./${NETSHORTNAME}-data'
+        ossh ${1} "rm -rf ${NETSHORTNAME}-data/ && mkdir -p ${NETSHORTNAME}-data/logs/ && mkdir ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/ && touch ${NETSHORTNAME}-data/logs/unreal.log && touch ${NETSHORTNAME}-data/local.conf"
+        cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} "bunzip2 | tar -xpf - -C ./${NETSHORTNAME}-data"
 }
 push_key() {
         ossh ${1} 'if [ ! -d ~/.ssh/ ]; then mkdir ~/.ssh/; fi; chmod -R 0700 ~/.ssh/'
         cat ~/.ssh/id_rsa.pub | ossh ${1} 'cat >> ~/.ssh/authorized_keys'
 }
 make_modules() {
-        ossh ${1} 'cd ${NETSHORTNAME}-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi'
+        ossh ${1} "cd ${NETSHORTNAME}-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi"
 }
 push_bins() {
 	SERVER="$( echo ${1} | cut -d : -f 2)"
@@ -88,14 +88,14 @@ push_bins() {
 	case "${FLAGS}" in
 		*t*)
 
-			ossh ${SERVER} 'cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/${NETSHORTNAME}-ircd  --with-spath=`pwd`/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
+			ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/${NETSHORTNAME}-ircd  --with-spath=`pwd`/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 		;;
 		*)
 
-			ossh ${SERVER} 'cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/${NETSHORTNAME}-ircd  --with-spath=`pwd`/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
+			ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/${NETSHORTNAME}-ircd  --with-spath=`pwd`/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 		;;
 	esac
-	ossh ${SERVER} 'cd ${NETSHORTNAME}-ircd && cd . && make clean && make'
+	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && cd . && make clean && make"
 	make_modules ${SERVER}
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} 'tar -cpf - ${NETSHORTNAME}-ircd | bzip2' > /tmp/binbackup/${SERVER}.tar.bz2
@@ -147,7 +147,7 @@ ping() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} 'grep MAXCONNECTIONS ${NETSHORTNAME}-ircd/config.log | head -n 1'` "
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} "grep MAXCONNECTIONS ${NETSHORTNAME}-ircd/config.log | head -n 1"` "
 
 done
 }

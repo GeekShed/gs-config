@@ -45,8 +45,8 @@ conf_init ()
         SCRIPTROOT=`pwd`
         CONFIG=${SCRIPTROOT}/conf/network.conf ; export CONFIG
         SHELL=/bin/sh ; export SHELL
-        NETWORK=`grep ^N ${CONFIG} | cut -d : -f 2` ; export NETWORK
-        NETSHORTNAME=`grep ^N ${CONFIG} | cut -d : -f 6` ; export NETSHORTNAME
+        NETWORK=$(grep ^N ${CONFIG} | cut -d : -f 2) ; export NETWORK
+        NETSHORTNAME=$(grep ^N ${CONFIG} | cut -d : -f 6) ; export NETSHORTNAME
         OUTPUTPATH=/tmp/${NETSHORTNAME}-config/$(rand)  ; export OUTPUTPATH
         rm -rf ${OUTPUTPATH}
         mkdir -p ${OUTPUTPATH}

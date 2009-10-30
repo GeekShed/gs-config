@@ -53,7 +53,7 @@ main () {
 		done
 		cp -Rp ${SCRIPTROOT}/conf/${NETWORK}/global/* ${CONFPATH}
 		cd ${CONFPATH} 
-		tar -cvf - * | bzip2 | ossh ${SERVERNAME} 'bunzip2 | tar -xf - -C ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/'
+		tar -cvf - * | bzip2 | ossh ${SERVERNAME} "bunzip2 | tar -xf - -C ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/"
 	done
 }
 
