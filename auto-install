@@ -82,12 +82,23 @@ make_modules() {
         ossh ${1} 'cd gs-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi'
 }
 push_bins() {
-	cd /tmp/svn && tar -cpvf - gs-ircd | bzip2 | ossh ${1} 'bunzip2 | tar -xpf - -C ./'
-	ossh ${1} 'cd gs-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/gs-ircd  --with-spath=`pwd`/gs-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
-	ossh ${1} 'cd gs-ircd && cd . && make clean && make'
-	make_modules ${1}
+	SERVER="$( echo ${1} | cut -d : -f 2)"
+	FLAGS="$( echo ${1} | cut -d : -f 5)"
+	cd /tmp/svn && tar -cpvf - gs-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
+	case "${FLAGS}" in
+		*t*)
+
+			ossh ${SERVER} 'cd gs-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/gs-ircd  --with-spath=`pwd`/gs-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
+		;;
+		*)
+
+			ossh ${SERVER} 'cd gs-ircd && ./configure --enable-hub  --enable-ssl --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=`pwd`/gs-ircd  --with-spath=`pwd`/gs-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking'
+		;;
+	esac
+	ossh ${SERVER} 'cd gs-ircd && cd . && make clean && make'
+	make_modules ${SERVER}
 	mkdir -p /tmp/binbackup/
-	ossh ${1} 'tar -cpf - gs-ircd | bzip2' > /tmp/binbackup/${1}.tar.bz2
+	ossh ${SERVER} 'tar -cpf - gs-ircd | bzip2' > /tmp/binbackup/${SERVER}.tar.bz2
 }
 push_server() {
 	rm -rf /tmp/svn
@@ -98,13 +109,13 @@ push_server() {
 	if [ "${1}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 		do
-			SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-			push_bins ${SERVER}
+			SERVERLINE=`echo ${WORKINGSERVERS}`
+			push_bins ${SERVERLINE}
 		done
 	else
 		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ${1}`
-		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		push_bins ${SERVER}
+		SERVERLINE=`echo ${WORKINGSERVERS}`
+		push_bins ${SERVERLINE}
 	fi
 }
 backup_module() {
