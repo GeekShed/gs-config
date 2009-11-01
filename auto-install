@@ -190,7 +190,7 @@ rehash_list() {
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
-		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal rehash" 2>/dev/null
+		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal rehash" 2>/dev/null
 	done
 }
 
@@ -199,7 +199,7 @@ restart_list() {
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
-		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal restart" 2>/dev/null
+		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal restart" 2>/dev/null
 	done
 }
 stop_list() {
@@ -207,7 +207,7 @@ stop_list() {
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
-		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal stop" 2>/dev/null
+		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal stop" 2>/dev/null
 	done
 }
 
