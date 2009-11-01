@@ -189,14 +189,6 @@ rehash_list() {
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
-		ossh ${SERVER} killall -1 ircd 2>/dev/null
-	done
-}
-rehash_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
-	do
-		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo ${SERVER}
 		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal rehash" 2>/dev/null
 	done
 }
