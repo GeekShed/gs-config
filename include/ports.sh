@@ -37,6 +37,9 @@ ports_gen ()
 			*o*)
 				SSLONLY="yes"
 			;;
+			*t*)
+				SCTPENABLED="yes"
+			;;
 			*)
 				unset SSLONLY
 			;;
@@ -52,6 +55,7 @@ ports_gen ()
 				;;
 				*t*)
 					SCTPPORT=yes
+					USEPORTS=yes
 				;;
 				*s*)
 					USEPORTS=yes
@@ -78,6 +82,7 @@ ports_gen ()
 					echo "};" >> ${PORTSFILE}
 				fi
 			fi
+			unset SCTPPORT
 		done
 
 	done
