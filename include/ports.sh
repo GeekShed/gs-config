@@ -91,5 +91,8 @@ ports_gen ()
 		done
 
 	done
+	SCTPENABLED="no"
+	SCTPPORT="no"
+
 	echo "    - ending ${PORTSFILE}"
 }
