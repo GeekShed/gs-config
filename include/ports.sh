@@ -50,6 +50,9 @@ ports_gen ()
 				*l*)
 					USEPORTS=yes
 				;;
+				*t*)
+					SCTPPORT=yes
+				;;
 				*s*)
 					USEPORTS=yes
 				;;
@@ -58,19 +61,22 @@ ports_gen ()
 				;;
 			esac
 			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
-				if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
-					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
-				else
-					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				if [ "${SCTPPORT}" = "yes" -a "${SCTPENABLED}" = "yes" ] ; then
+					if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
+						echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+					else
+						echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+					fi
+					if [ "${OPTIONS}" != "" ] ; then
+						echo "    options {" >> ${PORTSFILE}
+						case ${OPTIONS} in *c*) echo "        clientsonly;" >> ${PORTSFILE} ;;	esac
+						case ${OPTIONS} in *s*) echo "        serversonly;" >> ${PORTSFILE} ;;	esac
+						case ${OPTIONS} in *l*) echo "        ssl;" >> ${PORTSFILE} ;;		esac
+						case ${OPTIONS} in *t*) echo "        sctp;" >> ${PORTSFILE} ;;		esac
+						echo "    };" >> ${PORTSFILE}
+					fi
+					echo "};" >> ${PORTSFILE}
 				fi
-				if [ "${OPTIONS}" != "" ] ; then
-					echo "    options {" >> ${PORTSFILE}
-					case ${OPTIONS} in *c*) echo "        clientsonly;" >> ${PORTSFILE} ;;	esac
-					case ${OPTIONS} in *s*) echo "        serversonly;" >> ${PORTSFILE} ;;	esac
-					case ${OPTIONS} in *l*) echo "        ssl;" >> ${PORTSFILE} ;;		esac
-					echo "    };" >> ${PORTSFILE}
-				fi
-				echo "};" >> ${PORTSFILE}
 			fi
 		done
 
