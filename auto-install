@@ -186,7 +186,7 @@ dump_list() {
 }
 
 rehash_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
@@ -195,7 +195,7 @@ rehash_list() {
 }
 
 restart_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
@@ -203,7 +203,7 @@ restart_list() {
 	done
 }
 stop_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
@@ -211,7 +211,7 @@ stop_list() {
 	done
 }
 start_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
