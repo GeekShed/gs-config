@@ -83,6 +83,7 @@ ports_gen ()
 				fi
 			fi
 			unset SCTPPORT
+			unset SCTPENABLED
 		done
 
 	done
