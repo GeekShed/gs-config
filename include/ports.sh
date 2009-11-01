@@ -32,6 +32,8 @@ ports_gen ()
 	echo "    - starting ${PORTSFILE}"
 	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
+		unset SCTPPORT
+		unset SCTPENABLED
 		SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
 		case "${SOPTIONS}" in
 			*o*)
@@ -51,10 +53,11 @@ ports_gen ()
 			OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
 			case "${OPTIONS}" in
 				*l*)
-					USEPORTS=yes
-				;;
-				*t*)
 					SCTPPORT=yes
+				;;
+			esac
+			case "${OPTIONS}" in
+				*l*)
 					USEPORTS=yes
 				;;
 				*s*)
@@ -65,25 +68,26 @@ ports_gen ()
 				;;
 			esac
 			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
-				if [ "${SCTPPORT}" = "yes" -a "${SCTPENABLED}" = "yes" ] ; then
-					if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
-						echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
-					else
-						echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				if [ "${SCTPPORT}" = "yes" ] ; then
+					if [ "${SCTPENABLED}" != "yes" ] ; then
+						continue
 					fi
-					if [ "${OPTIONS}" != "" ] ; then
-						echo "    options {" >> ${PORTSFILE}
-						case ${OPTIONS} in *c*) echo "        clientsonly;" >> ${PORTSFILE} ;;	esac
-						case ${OPTIONS} in *s*) echo "        serversonly;" >> ${PORTSFILE} ;;	esac
-						case ${OPTIONS} in *l*) echo "        ssl;" >> ${PORTSFILE} ;;		esac
-						case ${OPTIONS} in *t*) echo "        sctp;" >> ${PORTSFILE} ;;		esac
-						echo "    };" >> ${PORTSFILE}
-					fi
-					echo "};" >> ${PORTSFILE}
 				fi
+				if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
+					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				else
+					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				fi
+				if [ "${OPTIONS}" != "" ] ; then
+					echo "    options {" >> ${PORTSFILE}
+					case ${OPTIONS} in *c*) echo "        clientsonly;" >> ${PORTSFILE} ;;	esac
+					case ${OPTIONS} in *s*) echo "        serversonly;" >> ${PORTSFILE} ;;	esac
+					case ${OPTIONS} in *l*) echo "        ssl;" >> ${PORTSFILE} ;;		esac
+					case ${OPTIONS} in *t*) echo "        sctp;" >> ${PORTSFILE} ;;		esac
+					echo "    };" >> ${PORTSFILE}
+				fi
+				echo "};" >> ${PORTSFILE}
 			fi
-			unset SCTPPORT
-			unset SCTPENABLED
 		done
 
 	done
