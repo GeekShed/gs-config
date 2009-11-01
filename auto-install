@@ -192,6 +192,30 @@ rehash_list() {
 		ossh ${SERVER} killall -1 ircd 2>/dev/null
 	done
 }
+rehash_list() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		echo ${SERVER}
+		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal rehash" 2>/dev/null
+	done
+}
+restart_list() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		echo ${SERVER}
+		ossh ${SERVER} "cd ${PREFIX-ircd && ./unreal restart" 2>/dev/null
+	done
+}
+stop_list() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		echo ${SERVER}
+		ossh ${SERVER} "cd ${PREFIX-ircd && ./unreal stop" 2>/dev/null
+	done
+}
 
 add_server() {
 	ossh ${1} mkdir -p ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd
@@ -244,6 +268,12 @@ case "${1}" in
         ;;
 	[rR][eE][hH][aA][sS][hH])
 		rehash_list
+	;;
+	[rR][eE][sS][tT][aA][rR][tT])
+		restart_list $2
+	;;
+	[sS][tT][oO][pP])
+		stop_list $2
 	;;
 	*)
 		usage
