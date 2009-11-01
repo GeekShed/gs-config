@@ -40,6 +40,8 @@ main () {
 		export WORKINGSERVER
 		SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :` ; export SERVERNAME
 		REGION=`echo ${WORKINGSERVER} | cut -f 9 -d :` ; export REGION
+		echo "${WORKINGSERVER}"
+		echo "${SERVERNAME}"
 		CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME} ; export CONFPATH
 		mkdir -p ${CONFPATH}
 		for args in $*
