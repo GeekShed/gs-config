@@ -197,7 +197,7 @@ restart_list() {
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
-		ossh ${SERVER} "cd ${PREFIX-ircd && ./unreal restart" 2>/dev/null
+		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal restart" 2>/dev/null
 	done
 }
 stop_list() {
