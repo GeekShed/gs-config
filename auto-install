@@ -210,6 +210,14 @@ stop_list() {
 		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal stop" 2>/dev/null
 	done
 }
+start_list() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		echo ${SERVER}
+		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal start" 2>/dev/null
+	done
+}
 
 add_server() {
 	ossh ${1} mkdir -p ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd
@@ -268,6 +276,9 @@ case "${1}" in
 	;;
 	[sS][tT][oO][pP])
 		stop_list $2
+	;;
+	[sS][tT][aA][rR][tT])
+		start_list $2
 	;;
 	*)
 		usage
