@@ -184,6 +184,7 @@ dump_list() {
         done
 	
 }
+
 rehash_list() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
@@ -192,6 +193,7 @@ rehash_list() {
 		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal rehash" 2>/dev/null
 	done
 }
+
 restart_list() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
@@ -205,7 +207,7 @@ stop_list() {
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo ${SERVER}
-		ossh ${SERVER} "cd ${PREFIX-ircd && ./unreal stop" 2>/dev/null
+		ossh ${SERVER} "cd ${PREFIX}-ircd && ./unreal stop" 2>/dev/null
 	done
 }
 
