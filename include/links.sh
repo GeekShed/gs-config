@@ -184,7 +184,6 @@ links_gen ()
 			echo "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
 			echo "    username *;" >> ${LINKFILE}
 			echo "    hostname ${LINKIP};" >> ${LINKFILE}
-			echo "    bind-ip ${BINDIP};" >> ${LINKFILE}
 			echo "    port ${DEFSCTPSERVERPORT};" >> ${LINKFILE}
 			echo "    password-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
 			echo "    password-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
@@ -253,7 +252,6 @@ links_gen ()
 			echo "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
 			echo "    username *;" >> ${LINKFILE}
 			echo "    hostname ${LINKIP};" >> ${LINKFILE}
-			echo "    bind-ip ${BINDIP};" >> ${LINKFILE}
 			echo "    port ${DEFSCTPSSLSERVERPORT};" >> ${LINKFILE}
 			echo "    password-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
 			echo "    password-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
