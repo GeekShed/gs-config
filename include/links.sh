@@ -305,6 +305,7 @@ links_gen ()
 				fi
 				echo "    hub *;" >> ${LINKFILE}
 				echo "    options {" >> ${LINKFILE}
+				echo "        autoconnect;" >> ${LINKFILE}
 				echo "        sctp;" >> ${LINKFILE}
 				echo "        ssl;" >> ${LINKFILE}
 				if [ "${IAMTHEHUB}" = "1" ]; then
