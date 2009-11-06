@@ -211,14 +211,22 @@ stop_list() {
 	done
 }
 start_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
-	do
-		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo ${SERVER}
-		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal start" 2>/dev/null
-	done
+	export MSERVERNAME="$1"
+	mcommand "cd ${NETSHORTNAME}-ircd && ./unreal start"
 }
 
+mcommand() {
+	if [ "${1}" = "" ] ; then
+		for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
+		do
+			SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+			echo ${SERVER}
+			ossh ${SERVER} "$*" 2>/dev/null
+		done
+	else
+		ossh ${MSERVERNAME} "$*" 2>/dev/null
+	fi
+}
 add_server() {
 	ossh ${1} mkdir -p ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd
 	ossh ${1} mkdir -p ${NETSHORTNAME}-ircd
@@ -269,7 +277,7 @@ case "${1}" in
                 make_modules $2
         ;;
 	[rR][eE][hH][aA][sS][hH])
-		rehash_list
+		rehash_list $2
 	;;
 	[rR][eE][sS][tT][aA][rR][tT])
 		restart_list $2
