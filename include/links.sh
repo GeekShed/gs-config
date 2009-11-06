@@ -181,8 +181,8 @@ links_gen ()
 		fi
 
 		# For SCTP Servers
-		if [ `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1]; then
-		if [ `echo ${OPTIONS} | grep -c 't'` -eq 1]; then
+		if [ `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1 ]; then
+		if [ `echo ${OPTIONS} | grep -c 't'` -eq 1 ]; then
 			echo "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
 			echo "    username *;" >> ${LINKFILE}
 			echo "    hostname ${LINKIP};" >> ${LINKFILE}
@@ -251,7 +251,7 @@ links_gen ()
 			echo "};" >> ${LINKFILE}
 		fi
 		fi
-		if [ `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1]; then
+		if [ `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1 ]; then
 		if [ `echo ${OPTIONS} | grep -c 't'` -eq 1 ]; then
 			echo "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
 			echo "    username *;" >> ${LINKFILE}
