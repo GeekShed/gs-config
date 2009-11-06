@@ -29,6 +29,7 @@ links_gen ()
 {
 	LINKFILE=${CONFPATH}/links.conf
 	echo "    - starting ${LINKFILE}"
+	SERVEROPTIONS=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -f 5 -d :`
 	DEFSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 7)"
 	DEFSSLSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 8)"
 	DEFSCTPSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 9)"
@@ -180,7 +181,8 @@ links_gen ()
 		fi
 
 		# For SCTP Servers
-		if [ `echo ${OPTIONS} | grep -c 't'` -eq 1 ]; then
+		if [ `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1]; then
+		if [ `echo ${OPTIONS} | grep -c 't'` -eq 1]; then
 			echo "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
 			echo "    username *;" >> ${LINKFILE}
 			echo "    hostname ${LINKIP};" >> ${LINKFILE}
@@ -248,6 +250,8 @@ links_gen ()
 			fi
 			echo "};" >> ${LINKFILE}
 		fi
+		fi
+		if [ `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1]; then
 		if [ `echo ${OPTIONS} | grep -c 't'` -eq 1 ]; then
 			echo "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
 			echo "    username *;" >> ${LINKFILE}
@@ -318,6 +322,7 @@ links_gen ()
 				echo "    };" >> ${LINKFILE}
 			fi
 			echo "};" >> ${LINKFILE}
+		fi
 		fi
 	done
 	echo "    - ending ${LINKFILE}"
