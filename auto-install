@@ -204,7 +204,7 @@ start_list() {
 }
 
 mcommand() {
-	if [ "${1}" = "" ] ; then
+	if [ "${MSERVERNAME}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
 		do
 			SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
