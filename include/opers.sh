@@ -40,7 +40,7 @@ oper_block ()
 						OSNAMELOWER=`echo $OSNAME | tr "[:upper:]" "[:lower:]"`
 						case ${OFLAGS} in
 							*s*)
-								echo "    password \"~/gs-data/gs-ircd/${OSNAMELOWER}.crt\" { sslclientcert; }; " >> ${OPERFILE}
+								echo "    password \"../${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/client-certs/${OSNAMELOWER}.pem\" { sslclientcert; }; " >> ${OPERFILE}
 							;;
 							*)
 								case ${#OPHASH} in
