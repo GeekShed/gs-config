@@ -39,7 +39,7 @@ oper_block ()
 						echo "    };" >> ${OPERFILE}
 						case ${OFLAGS} in
 							*s*)
-								echo "    password \"${OPHASH}\" { sslclientcert; }; " >> ${OPERFILE}
+								echo "    password \"~/gs-data/gs-ircd/${OSNAME}.pem\" { sslclientcert; }; " >> ${OPERFILE}
 							;;
 							*)
 								case ${#OPHASH} in

@@ -19,7 +19,7 @@ Phil:
 include/opers.sh - Auto creation of except ban blocks for global/root admins
 include/links.sh - Added R Line to raise SendQ limit of selected servers
 include/links.sh - Auto creation of SSL link blocks as default link
-
+include/opers.sh - Added support for ssl client certificates in place of oper passwords
 
 SC_Thor:
 ----------------------------------------------------
