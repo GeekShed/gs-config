@@ -58,12 +58,11 @@ oper_block ()
 						echo "    flags {"  >> ${OPERFILE}
 						OPACCESS=0
 						case ${OFLAGS} in
-							*[rg]*)
+							*r*)
 								echo "        netadmin;" >> ${OPERFILE}
 								OPACCESS=3
-								OPACCESS=3
 							;;
-							*a*)
+							*[ag]*)
 								echo "        services-admin;" >> ${OPERFILE}
 								OPACCESS=3
 							;;
