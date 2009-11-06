@@ -37,9 +37,10 @@ oper_block ()
 							echo "        userhost \"${UHOSTS}\";" >> ${OPERFILE}
 						done
 						echo "    };" >> ${OPERFILE}
+						OSNAMELOWER=`echo $OSNAME | tr "[:upper:]" "[:lower:]"`
 						case ${OFLAGS} in
 							*s*)
-								echo "    password \"~/gs-data/gs-ircd/${OSNAME}.pem\" { sslclientcert; }; " >> ${OPERFILE}
+								echo "    password \"~/gs-data/gs-ircd/${OSNAMELOWER}.pem\" { sslclientcert; }; " >> ${OPERFILE}
 							;;
 							*)
 								case ${#OPHASH} in
