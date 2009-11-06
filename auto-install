@@ -186,29 +186,17 @@ dump_list() {
 }
 
 rehash_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
-	do
-		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo ${SERVER}
-		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal rehash" 2>/dev/null
-	done
+	export MSERVERNAME="$1"
+	mcommand "cd ${NETSHORTNAME}-ircd && ./unreal rehash"
 }
 
 restart_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
-	do
-		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo ${SERVER}
-		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal restart" 2>/dev/null
-	done
+	export MSERVERNAME="$1"
+	mcommand "cd ${NETSHORTNAME}-ircd && ./unreal restart"
 }
 stop_list() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
-	do
-		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo ${SERVER}
-		ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./unreal stop" 2>/dev/null
-	done
+	export MSERVERNAME="$1"
+	mcommand "cd ${NETSHORTNAME}-ircd && ./unreal stop"
 }
 start_list() {
 	export MSERVERNAME="$1"
@@ -224,6 +212,7 @@ mcommand() {
 			ossh ${SERVER} "$*" 2>/dev/null
 		done
 	else
+		echo ${MSERVERNAME}
 		ossh ${MSERVERNAME} "$*" 2>/dev/null
 	fi
 }
