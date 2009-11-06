@@ -273,7 +273,7 @@ case "${1}" in
 	[rR][eE][hH][aA][sS][hH])
 		rehash_list $2
 	;;
-	[cC][hH][eE][cC][kK][dD][eE][fF]])
+	[cC][hH][eE][cC][kK][dD][eE][fF])
 		checkdef $2
 	;;
 	[rR][eE][sS][tT][aA][rR][tT])
