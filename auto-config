@@ -44,13 +44,14 @@ main () {
 		echo "${SERVERNAME}"
 		CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME} ; export CONFPATH
 		mkdir -p ${CONFPATH}
-		for args in $*
+		for args in server links ports opers spamfilter
 		do
 				case ${args} in
 					server) server_gen ;;
 					links) links_gen ;;
 					ports) ports_gen ;;
 					opers) opers_gen ;;
+					spamfilter) touch ${CONFPATH}/autospamfilter.conf ;;
 				esac
 		done
 		cp -Rp ${SCRIPTROOT}/conf/${NETWORK}/global/* ${CONFPATH}
