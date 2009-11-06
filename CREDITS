@@ -16,7 +16,9 @@ include/conf-gen.sh
 
 Phil:
 ----------------------------------------------------
-
+include/opers.sh - Auto creation of except ban blocks for global/root admins
+include/links.sh - Added R Line to raise SendQ limit of selected servers
+include/links.sh - Auto creation of SSL link blocks as default link
 
 
 SC_Thor:

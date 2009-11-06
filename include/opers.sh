@@ -38,11 +38,21 @@ oper_block ()
 						done
 						echo "    };" >> ${OPERFILE}
 						case ${OFLAGS} in
-							*m*)
-								echo "    password \"${OPHASH}\" { md5; }; " >> ${OPERFILE}
+							*s*)
+								echo "    password \"${OPHASH}\" { sslclientcert; }; " >> ${OPERFILE}
 							;;
 							*)
-								echo "    password \"${OPHASH}\" { sha1; }; " >> ${OPERFILE}
+								case ${#OPHASH} in
+									13)
+										echo"    password \"${OPHASH}\" { crypt; }; " >> ${OPERFILE}
+									;;
+									34)
+										echo "    password \"${OPHASH}\" { md5; }; " >> ${OPERFILE}
+									;;
+									38)
+										echo "    password \"${OPHASH}\" { sha1; }; " >> ${OPERFILE}
+									;;
+								esac
 						esac
 						echo "    flags {"  >> ${OPERFILE}
 						OPACCESS=0
