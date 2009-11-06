@@ -203,6 +203,11 @@ start_list() {
 	mcommand "cd ${NETSHORTNAME}-ircd && ./unreal start"
 }
 
+checkdef() {
+	export MSERVERNAME="$1"
+	mcommand "grep SCTP /usr/include/netinet/in.h"
+}
+
 mcommand() {
 	if [ "${MSERVERNAME}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
@@ -267,6 +272,9 @@ case "${1}" in
         ;;
 	[rR][eE][hH][aA][sS][hH])
 		rehash_list $2
+	;;
+	[cC][hH][eE][cC][kK][dD][eE][fF]])
+		checkdef $2
 	;;
 	[rR][eE][sS][tT][aA][rR][tT])
 		restart_list $2
