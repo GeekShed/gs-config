@@ -50,7 +50,6 @@ ports_gen ()
 		for PORTS in `grep ^P: ${STRIPCONF}`
 		do
 			unset SCTPPORT
-			echo "${PORTS}"
 			PORT="`echo ${PORTS} | cut -f 2 -d :`"
 			OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
 			case "${OPTIONS}" in
