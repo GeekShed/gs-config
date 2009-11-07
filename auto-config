@@ -62,4 +62,3 @@ main () {
 
 
 main $*
-rm -r ${OUTPUTPATH}

@@ -32,8 +32,8 @@ ports_gen ()
 	echo "    - starting ${PORTSFILE}"
 	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
 	do
-		unset SCTPPORT
 		unset SCTPENABLED
+		unset SSLONLY
 		SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
 		case "${SOPTIONS}" in
 			*o*)
@@ -47,8 +47,10 @@ ports_gen ()
 			;;
 		esac
 
-		for PORTS in `grep ^P ${STRIPCONF}`
+		for PORTS in `grep ^P: ${STRIPCONF}`
 		do
+			unset SCTPPORT
+			echo "${PORTS}"
 			PORT="`echo ${PORTS} | cut -f 2 -d :`"
 			OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
 			case "${OPTIONS}" in
@@ -63,6 +65,9 @@ ports_gen ()
 				*s*)
 					USEPORTS=yes
 				;;
+				*t*)
+					USEPORTS=yes
+				;;
 				*)
 					unset USEPORTS
 				;;
@@ -73,7 +78,7 @@ ports_gen ()
 						continue
 					fi
 				fi
-				if [ "`echo "${LISTENIP}"| grep -c ^\\\[`" = "0" ] ; then
+				if [ "$(echo "${LISTENIP}"| grep -c ^\\\[)" = "0" ] ; then
 					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 				else
 					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
