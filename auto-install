@@ -235,7 +235,7 @@ usage() {
 	echo "    ${COMMAND} dump"
 	echo "    ${COMMAND} rehash"
         echo "    ${COMMAND} prime"
-        echo "    ${COMMAND} prime"
+        echo "    ${COMMAND} pushkey"
         echo "    ${COMMAND} makemodules"
 }
 
