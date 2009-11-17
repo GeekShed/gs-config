@@ -88,21 +88,11 @@ push_bins() {
 	CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 	cd /tmp/svn && tar -cpvf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
 	echo "${SERVERPWD}"
-	if [[ "${FLAGS}" == *z* ]] ; then
-		CONFPARAMS="$CONFPARAMS --enable-ziplinks"
-	fi
-	if [[ "${FLAGS}" == *s* ]] ; then
-		CONFPARAMS="$CONFPARAMS --enable-ssl"
-	fi
-	if [[ "${FLAGS}" == *v* ]] ; then
-		CONFPARAMS="$CONFPARAMS --enable-inet6"
-	fi
-        if [[ "${FLAGS}" == *t* ]] ; then
-                # Not sure what to put here
-		# Apparently I can't have an empty if...
-                echo 'abc' > /dev/null
-        fi
-	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure $CONFPARAMS"
+	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
+	case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
+	case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
+
+	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure ${CONFPARAMS}"
 	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && cd . && make clean && make"
 	ossh ${SERVER} "sed s_%%DATADIR%%_${NETSHORTNAME}-data_g ${NETSHORTNAME}-ircd/unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > ${NETSHORTNAME}-ircd/unrealircd.conf"
 	make_modules ${SERVER}
