@@ -97,8 +97,11 @@ push_bins() {
 	if [[ "${FLAGS}" == *v* ]] ; then
 		CONFPARAMS="$CONFPARAMS --enable-inet6"
 	fi
-	if [[ "${FLAGS}" == *t* ]] ; then
-	fi
+        if [[ "${FLAGS}" == *t* ]] ; then
+                # Not sure what to put here
+		# Apparently I can't have an empty if...
+                echo 'abc' > /dev/null
+        fi
 	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure $CONFPARAMS"
 	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && cd . && make clean && make"
 	ossh ${SERVER} "sed s_%%DATADIR%%_${NETSHORTNAME}-data_g ${NETSHORTNAME}-ircd/unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > ${NETSHORTNAME}-ircd/unrealircd.conf"
