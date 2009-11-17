@@ -134,7 +134,7 @@ links_gen ()
 					fi
 				fi
 			done
-			echo ""${LINKNAME} ISMYHUB=${ISMYHUB}"
+			echo "${LINKNAME} ISMYHUB=${ISMYHUB}"
 			if [ "${ISAHUB}" = "1" ]; then
 				if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${LINKNAME}" ]; then
 					#this server is the root hub
