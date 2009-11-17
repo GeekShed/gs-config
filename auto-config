@@ -35,7 +35,12 @@ conf_init
 
 main () {
 	# run through scripts
-	for WORKINGSERVER in `grep ^S ${STRIPCONF}`
+	if [ "${1}" != "" ] ; then
+		SERVERLIST="${1}"
+	else
+		SERVERLIST="$(grep ^S ${STRIPCONF})"
+	fi
+	for WORKINGSERVER in ${SERVERLIST}
 	do
 		export WORKINGSERVER
 		SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :` ; export SERVERNAME
