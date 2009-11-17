@@ -80,7 +80,7 @@ ports_gen ()
 				if [ "$(echo "${LISTENIP}"| grep -c ^\\\[)" = "0" ] ; then
 					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
 				else
-					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+					echo "listen ${LISTENIP}:${PORT} {" | tr '_' ':' >> ${PORTSFILE}
 				fi
 				if [ "${OPTIONS}" != "" ] ; then
 					echo "    options {" >> ${PORTSFILE}
