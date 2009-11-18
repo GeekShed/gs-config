@@ -30,8 +30,9 @@ ports_gen ()
 {
 	PORTSFILE=${CONFPATH}/ports.conf
 	echo "    - starting ${PORTSFILE}"
-	for LISTENIP in `echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g`
+	for LISTENIP in $(echo ${WORKINGSERVER} | cut -f 3 -d : | sed s/-/\ /g | sed s/\;/\:/g)
 	do
+		echo "${LISTENIP}"
 		unset SCTPENABLED
 		unset SSLONLY
 		SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
@@ -71,7 +72,6 @@ ports_gen ()
 					unset USEPORTS
 				;;
 			esac
-			echo "${LISTENIP}"
 			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
 				if [ "${SCTPPORT}" = "yes" ] ; then
 					if [ "${SCTPENABLED}" != "yes" ] ; then
