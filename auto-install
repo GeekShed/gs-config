@@ -86,7 +86,7 @@ push_bins() {
 	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
 	case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
 	case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
-	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} "bunzip2 | tar -xpf - -C ./ && cd ${NETSHORTNAME}-ircd && ./configure ${CONFPARAMS} && cd ${NETSHORTNAME}-ircd && cd . && make clean && make && sed s_%%DATADIR%%_${NETSHORTNAME}-data_g ${NETSHORTNAME}-ircd/unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > ${NETSHORTNAME}-ircd/unrealircd.conf && cd ${NETSHORTNAME}-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi"
+	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} "bunzip2 | tar -xpf - -C ./ && cd ${NETSHORTNAME}-ircd && ./configure ${CONFPARAMS} && cd . && make clean && make && sed s_%%DATADIR%%_${NETSHORTNAME}-data_g unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > unrealircd.conf && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi"
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} "tar -cpf - ${NETSHORTNAME}-ircd | bzip2" > /tmp/binbackup/${SERVER}.tar.bz2
 }
