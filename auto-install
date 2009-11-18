@@ -86,7 +86,7 @@ push_bins() {
 	SERVERPWD="$(ossh ${SERVER} pwd)"
 	FLAGS="$( echo ${1} | cut -d : -f 5)"
 	CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
-	cd /tmp/svn && tar -cpvf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
+	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
 	echo "${SERVERPWD}"
 	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
 	case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
@@ -104,7 +104,7 @@ push_server() {
 	mkdir -p /tmp/svn
 	cd /tmp/svn
 	#svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
-	svn checkout http://gs-ircd.googlecode.com/svn/trunk/ ${NETSHORTNAME}-ircd
+	svn checkout -q http://gs-ircd.googlecode.com/svn/trunk/ ${NETSHORTNAME}-ircd
 	if [ "${1}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 		do
