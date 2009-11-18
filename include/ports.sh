@@ -30,7 +30,6 @@ ports_gen ()
 {
 	PORTSFILE=${CONFPATH}/ports.conf
 	echo "    - starting ${PORTSFILE}"
-	echo "${WORKINGSERVER}" | cut -f 3 -d :
 
 	for LISTENIP in $(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)
 	do

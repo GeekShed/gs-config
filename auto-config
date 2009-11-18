@@ -36,9 +36,9 @@ conf_init
 main () {
 	# run through scripts
 	if [ "${1}" != "" ] ; then
-		SERVERLIST="${1}"
+		SERVERLIST="$(grep ^S "${STRIPCONF}" | grep ${1})"
 	else
-		SERVERLIST="$(grep ^S ${STRIPCONF})"
+		SERVERLIST="$(grep ^S "${STRIPCONF}")"
 	fi
 	for WORKINGSERVER in ${SERVERLIST}
 	do
