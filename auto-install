@@ -78,24 +78,15 @@ push_key() {
         ossh ${1} 'if [ ! -d ~/.ssh/ ]; then mkdir ~/.ssh/; fi; chmod -R 0700 ~/.ssh/'
         cat ~/.ssh/id_rsa.pub | ossh ${1} 'cat >> ~/.ssh/authorized_keys'
 }
-make_modules() {
-        ossh ${1} "cd ${NETSHORTNAME}-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi"
-}
 push_bins() {
 	SERVER="$( echo ${1} | cut -d : -f 2)"
 	SERVERPWD="$(ossh ${SERVER} pwd)"
 	FLAGS="$( echo ${1} | cut -d : -f 5)"
 	CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
-	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./'
-	echo "${SERVERPWD}"
 	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
 	case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
 	case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
-
-	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && ./configure ${CONFPARAMS}"
-	ossh ${SERVER} "cd ${NETSHORTNAME}-ircd && cd . && make clean && make"
-	ossh ${SERVER} "sed s_%%DATADIR%%_${NETSHORTNAME}-data_g ${NETSHORTNAME}-ircd/unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > ${NETSHORTNAME}-ircd/unrealircd.conf"
-	make_modules ${SERVER}
+	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} 'bunzip2 | tar -xpf - -C ./ && cd ${NETSHORTNAME}-ircd && ./configure ${CONFPARAMS} && cd ${NETSHORTNAME}-ircd && cd . && make clean && make && sed s_%%DATADIR%%_${NETSHORTNAME}-data_g ${NETSHORTNAME}-ircd/unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > ${NETSHORTNAME}-ircd/unrealircd.conf && cd ${NETSHORTNAME}-ircd && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi'
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} "tar -cpf - ${NETSHORTNAME}-ircd | bzip2" > /tmp/binbackup/${SERVER}.tar.bz2
 }
