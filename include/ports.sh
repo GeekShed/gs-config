@@ -49,7 +49,6 @@ ports_gen ()
 
 		for PORTS in `grep ^P: ${STRIPCONF}`
 		do
-			echo "${PORTS}"
 			unset SCTPPORT
 			PORT="`echo ${PORTS} | cut -f 2 -d :`"
 			OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
@@ -72,6 +71,7 @@ ports_gen ()
 					unset USEPORTS
 				;;
 			esac
+			echo "${LISTENIP}"
 			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
 				if [ "${SCTPPORT}" = "yes" ] ; then
 					if [ "${SCTPENABLED}" != "yes" ] ; then
