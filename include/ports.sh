@@ -70,7 +70,7 @@ ports_gen ()
 			;;
 		esac
 		if [ "${SCTPPORT}" = "yes" ] ; then
-			LISTENIPS="*"
+			LISTENIPS='*'
 		else
 			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
 		fi
