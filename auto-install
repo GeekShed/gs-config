@@ -95,7 +95,13 @@ push_server() {
 	mkdir -p /tmp/svn
 	cd /tmp/svn
 	#svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
-	svn checkout -q http://gs-ircd.googlecode.com/svn/trunk/ ${NETSHORTNAME}-ircd
+	ILINE="$(grep ^I: ${STRIPCONF})"
+	if [ "${ILINE}" = "" ] ; then
+		URL="http://gs-ircd.googlecode.com/svn/trunk/"
+	else
+		URL="$(echo "${ILINE}" | head -n 1 | cut -d : -f 4-200)"
+	fi
+	svn checkout -q "${URL}" ${NETSHORTNAME}-ircd
 	if [ "${1}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 		do
