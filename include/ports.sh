@@ -83,7 +83,7 @@ ports_gen ()
 					fi
 				fi
 				if [ "${LISTENIP}" = "ANY" ] ; then
-					printf "listen \*:${PORT} {\n" >> ${PORTSFILE}
+					printf "listen *:${PORT} {\n" >> ${PORTSFILE}
 				else
 					if [ "$(echo "${LISTENIP}"| grep -c ^\\\[)" = "0" ] ; then
 						echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
