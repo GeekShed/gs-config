@@ -184,8 +184,8 @@ links_gen ()
 		if [ `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1 ]; then
 		if [ `echo ${OPTIONS} | grep -c 't'` -eq 1 ]; then
 			echo "link ${LINKNAME}.${DNSSUFFIX} {" >> ${LINKFILE}
-			echo "    username *;" >> ${LINKFILE}" >> ${LINKFILE}
-			echo "    hostname *;" >> ${LINKFILE}" >> ${LINKFILE}
+			echo "    username *;" >> ${LINKFILE}
+			echo "    hostname *;" >> ${LINKFILE}
 			echo "    port ${DEFSCTPSSLSERVERPORT};" >> ${LINKFILE}
 			echo "    password-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
 			echo "    password-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
