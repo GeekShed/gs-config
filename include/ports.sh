@@ -30,10 +30,31 @@ ports_gen ()
 {
 	PORTSFILE=${CONFPATH}/ports.conf
 	echo "    - starting ${PORTSFILE}"
-
-	for LISTENIP in $(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)
+	for PORTS in $(grep ^P: ${STRIPCONF})
 	do
-		echo "${LISTENIP}"
+		unset SCTPPORT
+		PORT="`echo ${PORTS} | cut -f 2 -d :`"
+		OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
+		case "${OPTIONS}" in
+			*t*)
+				SCTPPORT=yes
+			;;
+		esac
+		case "${OPTIONS}" in
+			*l*)
+				USEPORTS=yes
+			;;
+			*s*)
+				USEPORTS=yes
+			;;
+			*t*)
+				USEPORTS=yes
+			;;
+			*)
+				unset USEPORTS
+			;;
+		esac
+
 		unset SCTPENABLED
 		unset SSLONLY
 		SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
@@ -48,31 +69,13 @@ ports_gen ()
 				unset SSLONLY
 			;;
 		esac
-
-		for PORTS in `grep ^P: ${STRIPCONF}`
+		if [ "${SCTPPORT}" = "yes" ] ; then
+			LISTENIPS="*"
+		else
+			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
+		fi
+		for LISTENIP in ${LISTENIPS}
 		do
-			unset SCTPPORT
-			PORT="`echo ${PORTS} | cut -f 2 -d :`"
-			OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
-			case "${OPTIONS}" in
-				*t*)
-					SCTPPORT=yes
-				;;
-			esac
-			case "${OPTIONS}" in
-				*l*)
-					USEPORTS=yes
-				;;
-				*s*)
-					USEPORTS=yes
-				;;
-				*t*)
-					USEPORTS=yes
-				;;
-				*)
-					unset USEPORTS
-				;;
-			esac
 			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
 				if [ "${SCTPPORT}" = "yes" ] ; then
 					if [ "${SCTPENABLED}" != "yes" ] ; then
@@ -97,8 +100,8 @@ ports_gen ()
 		done
 
 	done
-	SCTPENABLED="no"
 	SCTPPORT="no"
+	SCTPENABLED="no"
 
 	echo "    - ending ${PORTSFILE}"
 }
