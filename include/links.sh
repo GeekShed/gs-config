@@ -189,7 +189,7 @@ links_gen ()
 			echo "    port ${DEFSCTPSSLSERVERPORT};" >> ${LINKFILE}
 			echo "    password-connect \"`grep ^X ${STRIPCONF} | cut -d : -f 2`\";" >> ${LINKFILE}
 			echo "    password-receive \"`grep ^X ${STRIPCONF} | cut -d : -f 3`\" { sha1; };" >> ${LINKFILE}
-			echo "    class hub;" >> ${LINKFILE}
+			echo "    class servers;" >> ${LINKFILE}
 			echo "    options { sctp; };" >> ${LINKFILE}
 			echo "};" >> ${LINKFILE}
 
