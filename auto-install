@@ -97,7 +97,7 @@ push_server() {
 	#svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
 	ILINE="$(grep ^I: ${STRIPCONF})"
 	if [ "${ILINE}" = "" ] ; then
-		URL="http://gs-ircd.googlecode.com/svn/trunk/"
+		URL="http://gs-ircd.googlecode.com/svn/branches/stable"
 	else
 		URL="$(echo "${ILINE}" | head -n 1 | cut -d : -f 4-200)"
 	fi
