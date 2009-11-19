@@ -70,7 +70,7 @@ ports_gen ()
 			;;
 		esac
 		if [ "${SCTPPORT}" = "yes" ] ; then
-			LISTENIPS='*'
+			LISTENIPS='ANY'
 		else
 			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
 		fi
@@ -82,10 +82,14 @@ ports_gen ()
 						continue
 					fi
 				fi
-				if [ "$(echo "${LISTENIP}"| grep -c ^\\\[)" = "0" ] ; then
-					echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+				if [ "${LISTENIP}" = "ANY" ] ; then
+					printf "listen \*:${PORT} {\n" >> ${PORTSFILE}
 				else
-					echo "listen ${LISTENIP}:${PORT} {" | tr '_' ':' >> ${PORTSFILE}
+					if [ "$(echo "${LISTENIP}"| grep -c ^\\\[)" = "0" ] ; then
+						echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
+					else
+						echo "listen ${LISTENIP}:${PORT} {" | tr '_' ':' >> ${PORTSFILE}
+					fi
 				fi
 				if [ "${OPTIONS}" != "" ] ; then
 					echo "    options {" >> ${PORTSFILE}
