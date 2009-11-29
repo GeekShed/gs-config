@@ -32,10 +32,16 @@ oper_block ()
 						echo "    /* ${ONICK} - ${OLNAME} - ${OEMAIL} */" >> ${OPERFILE}
 						echo "    class opers;" >> ${OPERFILE}
 						echo "    from {" >> ${OPERFILE}
-						for UHOSTS in `echo ${OHOSTS} | sed s/_/\ /g`
-						do
-							echo "        userhost \"${UHOSTS}\";" >> ${OPERFILE}
-						done
+						case ${OFLAGS} in
+							*s*)
+								echo "        userhost \"*@*\";" >> ${OPERFILE}
+							;;
+							*)
+								for UHOSTS in `echo ${OHOSTS} | sed s/_/\ /g`
+								do
+									echo "        userhost \"${UHOSTS}\";" >> ${OPERFILE}
+								done
+						esac
 						echo "    };" >> ${OPERFILE}
 						OSNAMELOWER=`echo $OSNAME | tr "[:upper:]" "[:lower:]"`
 						case ${OFLAGS} in
