@@ -198,7 +198,7 @@ start_list() {
 
 checkdef() {
 	export MSERVERNAME="$1"
-	mcommand "grep SCTP /usr/include/netinet/in.h"
+	mcommand "command -v nohup"
 }
 
 mcommand() {
