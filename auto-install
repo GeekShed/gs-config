@@ -82,11 +82,7 @@ push_bins() {
 	SERVER="$( echo ${1} | cut -d : -f 2)"
 	SERVERPWD="$(ossh ${SERVER} pwd)"
 	FLAGS="$( echo ${1} | cut -d : -f 5)"
-	CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
-	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
-	case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
-	case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
-	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh ${SERVER} "bunzip2 | tar -xpf - -C ./ && cd ${NETSHORTNAME}-ircd && ./configure ${CONFPARAMS} && cd . && make clean && make && sed s_%%DATADIR%%_${NETSHORTNAME}-data_g unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > unrealircd.conf && if [ -f makemodules ]; then chmod +x makemodules; ./makemodules; fi"
+	ossh "${SERVER}" "${NETSHORTNAME}-data/scripts/ircds/gs-ircd/build.sh" "${NETSHORTNAME}" "${FLAGS}"
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} "tar -cpf - ${NETSHORTNAME}-ircd | bzip2" > /tmp/binbackup/${SERVER}.tar.bz2
 }
