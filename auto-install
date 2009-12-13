@@ -97,7 +97,7 @@ push_server() {
 	else
 		URL="$(echo "${ILINE}" | head -n 1 | cut -d : -f 4-200)"
 	fi
-	svn checkout -q "${URL}" ${NETSHORTNAME}-ircd
+	svn checkout "${URL}" ${NETSHORTNAME}-ircd
 	if [ "${1}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 		do

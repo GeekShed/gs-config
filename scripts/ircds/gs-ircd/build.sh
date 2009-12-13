@@ -29,7 +29,7 @@
 NETSHORTNAME="${1}"
 FLAGS="${2}"
 SERVERPWD="$(pwd)"
-bunzip2 | tar -xpf - -C "${SERVERPWD}"
+bunzip2 | tar -xvpf - -C "${SERVERPWD}"
 CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
 case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
