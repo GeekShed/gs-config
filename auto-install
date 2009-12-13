@@ -91,7 +91,7 @@ push_server() {
 	mkdir -p /tmp/svn
 	cd /tmp/svn
 	#svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
-	ILINE="$(grep ^I: ${STRIPCONF})"
+	ILINE="$(grep ^I:: ${STRIPCONF})"
 	if [ "${ILINE}" = "" ] ; then
 		URL="http://gs-ircd.googlecode.com/svn/branches/stable"
 	else
@@ -140,8 +140,7 @@ ping() {
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} "grep MAXCONNECTIONS ${NETSHORTNAME}-ircd/config.log | head -n 1"` "
-
-done
+	done
 }
 dump_list() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
