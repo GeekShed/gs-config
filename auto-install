@@ -201,6 +201,15 @@ checkdef() {
 	mcommand "command -v nohup"
 }
 
+script_sync() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		cd "${WORKDIR}"
+		tar -cf - scripts | ossh ${SERVER} "tar -xpf - -C ./${NETSHORTNAME}-data" 2>/dev/null
+	done
+}
+
 mcommand() {
 	if [ "${MSERVERNAME}" = "" ] ; then
 		for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
@@ -271,6 +280,9 @@ case "${1}" in
 	;;
 	[rR][eE][sS][tT][aA][rR][tT])
 		restart_list $2
+	;;
+	[sS][cC][rR][iI][pP][tT][sS][yY][nN][cC])
+		script_sync $2
 	;;
 	[sS][tT][oO][pP])
 		stop_list $2
