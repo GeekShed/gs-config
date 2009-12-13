@@ -203,7 +203,7 @@ script_sync() {
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 		echo "${SERVER}"
 		cd "${WORKDIR}"
-		tar -cf - scripts | ossh ${SERVER} "tar -xpf - -C ./${NETSHORTNAME}-data" 2>/dev/null
+		tar -cf - scripts | ossh ${SERVER} "rm -rf ./${NETSHORTNAME}-data/scripts && tar -xpf - -C ./${NETSHORTNAME}-data" 2>/dev/null
 	done
 }
 
