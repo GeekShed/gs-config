@@ -71,6 +71,7 @@ create_config() {
 	
 }
 prime_server() {
+	script_sync "${1}"
         ossh ${1} "rm -rf ${NETSHORTNAME}-data/ && mkdir -p ${NETSHORTNAME}-data/logs/ && mkdir ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/ && touch ${NETSHORTNAME}-data/logs/unreal.log && touch ${NETSHORTNAME}-data/local.conf"
         cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} "bunzip2 | tar -xpf - -C ./${NETSHORTNAME}-data"
 }
@@ -197,13 +198,20 @@ checkdef() {
 }
 
 script_sync() {
-	for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
-	do
-		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		echo "${SERVER}"
-		cd "${WORKDIR}"
-		tar -cf - scripts | ossh ${SERVER} "rm -rf ./${NETSHORTNAME}-data/scripts && tar -xpf - -C ./${NETSHORTNAME}-data" 2>/dev/null
-	done
+	OLDPWD="$(pwd)"
+	cd "${WORKDIR}"
+	if [ "${1}" = "" ] ; then
+		for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
+		do
+			SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+			echo ${SERVER}
+			tar -cf - scripts | ossh ${SERVER} "rm -rf ./${NETSHORTNAME}-data/scripts && tar -xpf - -C ./${NETSHORTNAME}-data" 2>/dev/null
+		done
+	else
+		echo "${1}"
+		tar -cf - scripts | ossh "${1}" "rm -rf ./${NETSHORTNAME}-data/scripts && tar -xpf - -C ./${NETSHORTNAME}-data" 2>/dev/null
+	fi
+	cd "${OLDPWD}"
 }
 
 mcommand() {
