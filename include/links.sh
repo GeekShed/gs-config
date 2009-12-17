@@ -153,11 +153,7 @@ links_gen ()
 				echo "    options {" >> ${LINKFILE}
 				echo "        ssl;" >> ${LINKFILE}
 				if [ ! `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1 ]; then
-					if [ ! `echo ${OPTIONS} | grep -c 't'` -eq 1 ]; then
-						if [ "${ISMYHUB}" = "1" ]; then
-							echo "        autoconnect;" >> ${LINKFILE}
-						fi
-					fi
+					echo "        autoconnect;" >> ${LINKFILE}
 				fi
 				case ${OPTIONS} in *z*) echo "        zip;" >> ${LINKFILE} ;;	esac
 				echo "    };" >> ${LINKFILE}
