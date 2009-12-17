@@ -152,8 +152,12 @@ links_gen ()
 				echo "    hub *;" >> ${LINKFILE}
 				echo "    options {" >> ${LINKFILE}
 				echo "        ssl;" >> ${LINKFILE}
-				if [ "${ISMYHUB}" = "1" ]; then
-					echo "        autoconnect;" >> ${LINKFILE}
+				if [ ! `echo ${SERVEROPTIONS} | grep -c 't'` -eq 1 ]; then
+					if [ ! `echo ${OPTIONS} | grep -c 't'` -eq 1 ]; then
+						if [ "${ISMYHUB}" = "1" ]; then
+							echo "        autoconnect;" >> ${LINKFILE}
+						fi
+					fi
 				fi
 				case ${OPTIONS} in *z*) echo "        zip;" >> ${LINKFILE} ;;	esac
 				echo "    };" >> ${LINKFILE}
@@ -233,9 +237,6 @@ links_gen ()
 				echo "    hub *;" >> ${LINKFILE}
 				echo "    options {" >> ${LINKFILE}
 				echo "        sctp;" >> ${LINKFILE}
-				if [ "${ISMYHUB}" = "1" ]; then
-					echo "        autoconnect;" >> ${LINKFILE}
-				fi
 				case ${OPTIONS} in *z*) echo "        zip;" >> ${LINKFILE} ;;	esac
 				echo "    };" >> ${LINKFILE}
 			else
@@ -317,7 +318,6 @@ links_gen ()
 				fi
 				echo "    hub *;" >> ${LINKFILE}
 				echo "    options {" >> ${LINKFILE}
-				echo "        autoconnect;" >> ${LINKFILE}
 				echo "        sctp;" >> ${LINKFILE}
 				echo "        ssl;" >> ${LINKFILE}
 				if [ "${IAMTHEHUB}" = "1" ]; then
