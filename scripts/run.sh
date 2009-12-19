@@ -48,9 +48,8 @@ usage() {
 	echo "blah"
 }
 
-echo "${SERVERPWD}/${SCRIPTDIR}"
-case "${COMMAND}" in
-	build)
+case "${COMMANDNAME}" in
+	[bB][uU][iI][lL][dD])
 		echo "${SERVERPWD}/${SCRIPTDIR}/ircds/gs-ircd/build.sh"
 	;;
 	*)
