@@ -36,11 +36,11 @@ shift
 export SERVERPWD="$(pwd)"
 
 
-timer() {
+beachball() {
 	while [ "break" != "whatever" ] 
 	do
 		printf "."
-		sleep 2
+		sleep 1
 	done
 }
 
