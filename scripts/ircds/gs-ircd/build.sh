@@ -49,5 +49,4 @@ build_main() {
 		./makemodules;
 	fi
 	pkill -9 "${BEACHBALLPID}" >/dev/null 2>/dev/null
-	printf "\n"
 }

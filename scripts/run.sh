@@ -57,3 +57,4 @@ case "${COMMANDNAME}" in
 		usage
 	;;
 esac
+printf "\n" >&2
