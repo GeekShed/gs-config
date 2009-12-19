@@ -40,7 +40,7 @@ timer() {
 	while [ "break" != "whatever" ] 
 	do
 		printf "."
-		sleep 5
+		sleep 2
 	done
 }
 
