@@ -36,13 +36,22 @@ shift
 export SERVERPWD="$(pwd)"
 
 
+timer() {
+	while [ "break" != "whatever" ] 
+	do
+		printf "."
+		sleep 5
+	done
+}
+
 usage() {
 	echo "blah"
 }
-echo "${SCRIPTDIR}"
+
+echo "${SERVERPWD}/${SCRIPTDIR}"
 case "${COMMAND}" in
 	build)
-		echo "build"
+		echo "${SERVERPWD}/${SCRIPTDIR}/ircds/gs-ircd/build.sh"
 	;;
 	*)
 		usage
