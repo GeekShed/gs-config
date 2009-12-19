@@ -28,6 +28,8 @@
 
 
 build_main() {
+	timer >&2 &
+	TIMERPID=$!
 	bunzip2 | tar -xvpf - -C "${SERVERPWD}"
 	CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
@@ -46,4 +48,6 @@ build_main() {
 	if [ -f makemodules ]; then chmod +x makemodules; 
 		./makemodules;
 	fi
+	pkill -9 "${TIMERPID}" >/dev/null 2>/dev/null
+	printf "\n"
 }
