@@ -26,24 +26,24 @@
 # SUCH DAMAGE.
 
 
-NETSHORTNAME="${1}"
-FLAGS="${2}"
-SERVERPWD="$(pwd)"
-bunzip2 | tar -xvpf - -C "${SERVERPWD}"
-CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
-case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
-case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
-case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
 
-cd ${NETSHORTNAME}-ircd
-./configure ${CONFPARAMS} 
+build_main() {
+	bunzip2 | tar -xvpf - -C "${SERVERPWD}"
+	CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
+	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
+	case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
+	case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
 
-cd .
-make clean
-make
+	cd ${NETSHORTNAME}-ircd
+	./configure ${CONFPARAMS} 
 
-sed s_%%DATADIR%%_${NETSHORTNAME}-data_g unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > unrealircd.conf
+	cd .
+	make clean
+	make
 
-if [ -f makemodules ]; then chmod +x makemodules; 
-	./makemodules;
-fi
+	sed s_%%DATADIR%%_${NETSHORTNAME}-data_g unrealircd.conf.base | sed s_%%IRCDDIR%%_${NETSHORTNAME}-ircd_g > unrealircd.conf
+
+	if [ -f makemodules ]; then chmod +x makemodules; 
+		./makemodules;
+	fi
+}

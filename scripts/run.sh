@@ -50,7 +50,8 @@ usage() {
 
 case "${COMMANDNAME}" in
 	[bB][uU][iI][lL][dD])
-		echo "${SERVERPWD}/${SCRIPTDIR}/ircds/gs-ircd/build.sh"
+		. "${SERVERPWD}/${SCRIPTDIR}/ircds/gs-ircd/build.sh"
+		build_main
 	;;
 	*)
 		usage

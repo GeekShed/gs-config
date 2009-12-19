@@ -83,7 +83,7 @@ push_bins() {
 	SERVER="$( echo ${1} | cut -d : -f 2)"
 	SERVERPWD="$(ossh ${SERVER} pwd)"
 	FLAGS="$( echo ${1} | cut -d : -f 5)"
-	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh "${SERVER}" "nohup ${NETSHORTNAME}-data/scripts/ircds/gs-ircd/build.sh >${NETSHORTNAME}-data/logs/build.log" "${NETSHORTNAME}" "${FLAGS}"
+	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh "${SERVER}" "nohup ${NETSHORTNAME}-data/scripts/run.sh >${NETSHORTNAME}-data/logs/build.log" "build" "${NETSHORTNAME}" "${FLAGS}"
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} "tar -cpf - ${NETSHORTNAME}-ircd | bzip2" > /tmp/binbackup/${SERVER}.tar.bz2
 }
