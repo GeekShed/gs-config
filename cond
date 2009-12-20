@@ -31,9 +31,8 @@ conf_init
 
 mkill() {
 	PIDLIST="$(ps -ef | awk -F "PPID=${1}" '$3 == PPID { print $2 }')"
-	echo "${1}"
 	echo "${PIDLIST}"
-	if [ "${PIDLIST}" != "" ] ; then
+	if [ "${PIDLISTs}" != "" ] ; then
 		for pid in ${PIDLIST}
 		do
 			kill -9 "${pid}"
