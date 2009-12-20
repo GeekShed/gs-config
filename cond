@@ -33,9 +33,17 @@ echo "${STRIPCONF}"
 PIDLIST="$(for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 do
 	SERVER="$(echo ${WORKINGSERVERS} | cut -d : -f 2)"
-	ossh "${SERVER}" "${NETSHORTNAME}-data/scripts/run.sh ping" >/dev/null </dev/null 2>/dev/null &
-	PID=$!
-	echo "${SERVER}:${PID}"
+	FLAGS="$(echo ${WORKINGSERVERS} | cut -d : -f 5)"
+	case "${FLAGS}" in
+		*n*)
+			echo "" >/dev/null
+		;;
+		*)
+			ossh "${SERVER}" "${NETSHORTNAME}-data/scripts/run.sh ping" >/dev/null </dev/null 2>/dev/null &
+			PID=$!
+			echo "${SERVER}:${PID}"
+		;;
+	esac
 done)"
 
 if [ "${PIDLIST}" != "" ] ; then
