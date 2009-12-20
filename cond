@@ -30,12 +30,24 @@
 conf_init
 
 echo "${STRIPCONF}"
-for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+PIDLIST="$(for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 do
 	SERVER="$(echo ${WORKINGSERVERS} | cut -d : -f 2)"
 	ossh "${SERVER}" "${NETSHORTNAME}-data/scripts/run.sh ping" >/dev/null </dev/null 2>/dev/null &
 	PID=$!
 	echo "${SERVER}:${PID}"
-done
+done)"
 
+if [ "${PIDLIST}" != "" ] ; then
+	for pid in ${PIDLIST}
+	do
+		SERVERNAME="$(echo ${pid} | cut -d : -f 1)"
+		PID="$(echo ${pid} | cut -d : -f 2)"
+		echo "${SERVERNAME}"
+		echo "${PID}"
+		if [ "${PID}" != "" ] ; then
+			kill "${PID}"
+		fi
+	done
+fi
 rm -r ${OUTPUTPATH}
