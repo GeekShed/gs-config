@@ -52,9 +52,9 @@ if [ "${PIDLIST}" != "" ] ; then
 		SERVERNAME="$(echo ${pid} | cut -d : -f 1)"
 		PID="$(echo ${pid} | cut -d : -f 2)"
 		echo "${SERVERNAME}"
-		echo "${PID}"
 		if [ "${PID}" != "" ] ; then
-			kill "${PID}"
+			echo "${PID}"
+			kill -9 "${PID}"
 		fi
 	done
 fi
