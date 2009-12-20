@@ -40,7 +40,7 @@ mkill() {
 	fi
 }
 
-PIDLIST="$(for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+PIDLIST="$(for WORKINGSERVERS in `grep ^S ${STRIPCONF} | head -n 1`
 do
 	SERVER="$(echo ${WORKINGSERVERS} | cut -d : -f 2)"
 	FLAGS="$(echo ${WORKINGSERVERS} | cut -d : -f 5)"
