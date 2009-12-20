@@ -53,6 +53,13 @@ case "${COMMANDNAME}" in
 		. "${SERVERPWD}/${SCRIPTDIR}/ircds/gs-ircd/build.sh"
 		build_main
 	;;
+	[pP][iI][nN][gG])
+		while true
+		do
+			echo "test" >&2
+			sleep 5
+		done
+	;;
 	*)
 		usage
 	;;
