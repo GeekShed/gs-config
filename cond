@@ -33,7 +33,9 @@ echo "${STRIPCONF}"
 for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 do
 	SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-	nohup sh -c '(. include/conf.sh ; while true ; do ossh ${SERVER} >/dev/null </dev/null 2>/dev/null ; done)' &
+	ossh ${SERVER} "${NETWHORTNAME}-data/scripts/run.sh ping" >/dev/null </dev/null 2>/dev/null ; done &
+	PID=$!
+	echo "${SERVER}:${PID}"
 done
 
 rm -r ${OUTPUTPATH}
