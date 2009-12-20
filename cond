@@ -29,7 +29,16 @@
 . include/conf.sh
 conf_init
 
-echo "${STRIPCONF}"
+mkill() {
+	PIDLIST="$(ps -ef | awk '$3' == "${1}" '{ print $2 }')"
+	if [ "${PIDLIST}" != "" ] ; then
+		for pid in ${PIDLIST}
+		do
+			kill -9 "${pid}"
+		done
+	fi
+}
+
 PIDLIST="$(for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 do
 	SERVER="$(echo ${WORKINGSERVERS} | cut -d : -f 2)"
@@ -54,7 +63,7 @@ if [ "${PIDLIST}" != "" ] ; then
 		echo "${SERVERNAME}"
 		if [ "${PID}" != "" ] ; then
 			echo "${PID}"
-			kill -9 "${PID}"
+			mkill "${PID}"
 		fi
 	done
 fi
