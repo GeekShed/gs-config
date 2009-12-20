@@ -30,9 +30,9 @@
 conf_init
 
 mkill() {
-	PPID="${1}"
-	echo "${PPID}"
-	PIDLIST="$(ps -ef | awk -F "PPID=${PPID}" '$3 == PPID { print $2 }')"
+	REALPPID="${1}"
+	echo "${REALPPID}"
+	PIDLIST="$(ps -ef | awk -F "PPID=${REALPPID}" '$3 == PPID { print $2 }')"
 	echo "${PIDLIST}"
 	if [ "${PIDLISTs}" != "" ] ; then
 		for pid in ${PIDLIST}
