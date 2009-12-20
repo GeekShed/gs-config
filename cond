@@ -32,7 +32,7 @@ conf_init
 mkill() {
 	REALPPID="${1}"
 	echo "${REALPPID}"
-	PIDLIST="$(ps -ef | awk -F "PPID=${REALPPID}" '$3 ~ /PPID/ { print $2 }')"
+	ps -ef | awk -F "PPID=${REALPPID}" '{ if ($3 ~ /PPID/) { print $2; } }'
 	echo "${PIDLIST}"
 	if [ "${PIDLISTs}" != "" ] ; then
 		for pid in ${PIDLIST}
