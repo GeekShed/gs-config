@@ -97,6 +97,7 @@ ports_gen ()
 					case ${OPTIONS} in *s*) echo "        serversonly;" >> ${PORTSFILE} ;;	esac
 					case ${OPTIONS} in *l*) echo "        ssl;" >> ${PORTSFILE} ;;		esac
 					case ${OPTIONS} in *t*) echo "        sctp;" >> ${PORTSFILE} ;;		esac
+					case ${OPTIONS} in *q*) echo "        seqpacket;" >> ${PORTSFILE} ;;	esac
 					echo "    };" >> ${PORTSFILE}
 				fi
 				echo "};" >> ${PORTSFILE}
