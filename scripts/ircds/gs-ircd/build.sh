@@ -38,6 +38,8 @@ build_main() {
 
 	cd ${NETSHORTNAME}-ircd
 	./configure ${CONFPARAMS} 
+	case "${FLAGS}" in *d*) echo "#define DEBUGMODE" >>"${SERVERPWD}/include/config.h";; esac
+	case "${FLAGS}" in *d*) echo "#define DEBUG" >>"${SERVERPWD}/include/config.h";; esac
 
 	cd .
 	make clean
