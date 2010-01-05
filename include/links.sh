@@ -96,7 +96,7 @@ links_gen ()
 			case ${OPTIONS} in *z*) echo "        zip;" >> ${LINKFILE} ;;	esac
 			echo "    };" >> ${LINKFILE}
 		else
-			if [ "`grep ^R: ${STRIPCONF} | cut -d : -f 2`" = "${LINKNAME}" ]; then
+			if [ "`grep -c ^R:${LINKNAME} ${STRIPCONF}`" = 1 ]; then
 				echo "    class upsendq;" >> ${LINKFILE}
 			else
 				echo "    class leaf;" >> ${LINKFILE}
