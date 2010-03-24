@@ -29,7 +29,7 @@ server_gen ()
 {
 	SERVERFILE=${CONFPATH}/server.conf
 	echo "    - starting ${SERVERFILE}"
-	SLINE=`grep ^S ${STRIPCONF} | grep ${SERVERNAME}`
+	SLINE=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME}`
 	NAME=${SERVERNAME}.${DNSSUFFIX}
 	NUMERIC=`echo ${SLINE} | cut -d : -f 6`
 	PASS=`echo ${SLINE} | cut -d : -f 7`

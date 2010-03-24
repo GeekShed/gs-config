@@ -29,13 +29,13 @@ links_gen ()
 {
 	LINKFILE=${CONFPATH}/links.conf
 	echo "    - starting ${LINKFILE}"
-	SERVEROPTIONS=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -f 5 -d :`
+	SERVEROPTIONS=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME} | cut -f 5 -d :`
 	DEFSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 7)"
 	DEFSSLSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 8)"
 	DEFSCTPSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 9)"
 	DEFSCTPSSLSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 10)"
-	MYREGION=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 8`
-	BINDIP=`grep ^S ${STRIPCONF} | grep ${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
+	MYREGION=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME} | cut -d : -f 8`
+	BINDIP=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
 	echo "ulines {" >> ${LINKFILE}
 	for SERVICESSERVER in `grep ^V ${STRIPCONF}`
 	do
@@ -47,7 +47,7 @@ links_gen ()
 	if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
 		IAMTHEROOTHUB=1
 	fi	
-	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ${SERVERNAME}`
+	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ^S:${SERVERNAME}`
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`
 		LINKIP=`echo ${REMOTESERVER} | cut -f 3 -d : | cut -f 1 -d -`

@@ -60,7 +60,7 @@ conf_init ()
 }
 
 ossh() {
-        local SERVER=`grep ^S ${STRIPCONF} | grep "${1}"`
+        local SERVER=`grep ^S ${STRIPCONF} | grep "^S:${1}"`
         shift
         local SSHIP=`echo "${SERVER}" | cut -d : -f 4`
         if [ "${SSHIP}" = "" ] ; then

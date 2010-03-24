@@ -106,7 +106,7 @@ push_server() {
 			push_bins ${SERVERLINE}
 		done
 	else
-		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ${1}`
+		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ^S:${1}`
 		SERVERLINE=`echo ${WORKINGSERVERS}`
 		push_bins ${SERVERLINE}
 	fi
