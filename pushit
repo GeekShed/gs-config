@@ -1,0 +1,3 @@
+#!/bin/sh
+./auto-config
+./auto-install rehash

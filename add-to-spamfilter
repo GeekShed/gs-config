@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+if [ $# != 4 ] ; then
+	echo 'Not enough parameters'
+	exit
+fi
+
+date=`date`
+block="# Added by ${4} ${date}\n"
+block="${block}spamfilter {\n"
+block="${block}\tregex \"${1}\";\n"
+block="${block}\ttarget { ${2} };\n"
+block="${block}\taction ${3};\n"
+
+if [ ${3} = "gline" ] ; then
+	block="${block}\tban-time 3d;\n"
+	block="${block}\treason \"Spamfilter match. If you feel this ban is in error, you can appeal it at http://www.geekshed.net/bans/?setby=Spamfilter&reason=Spamfilter%20match&time=15d&seton=*%40IP.ADDRESS\";\n"
+else
+	if [ ${3} = "shun" ] ; then
+		block="${block}\tban-time 12h;\n"
+		block="${block}\treason \"Shunned!\";\n"
+	else
+		block="${block}\treason \"Spamfilter match. Do NOT attempt to get around this filter. If you think it is an error, tell us in #help\";\n"
+	fi
+fi
+
+
+block="${block}};\n"
+
+echo -e $block >> conf/geekshed/global/spamfilter-operscript.conf
+
+./push-spamfilter
+./auto-install rehash

@@ -220,11 +220,11 @@ mcommand() {
 		do
 			SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
 			echo ${SERVER}
-			ossh ${SERVER} "$*" 2>/dev/null
+			ossh ${SERVER} "$*"
 		done
 	else
 		echo ${MSERVERNAME}
-		ossh ${MSERVERNAME} "$*" 2>/dev/null
+		ossh ${MSERVERNAME} "$*"
 	fi
 }
 add_server() {
