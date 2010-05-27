@@ -50,5 +50,5 @@ build_main() {
 	if [ -f makemodules ]; then chmod +x makemodules; 
 		./makemodules;
 	fi
-	pkill -9 "${BEACHBALLPID}" >/dev/null 2>/dev/null
+	kill -9 "${BEACHBALLPID}" >/dev/null 2>/dev/null
 }
