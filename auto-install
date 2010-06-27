@@ -71,9 +71,9 @@ create_config() {
 	
 }
 prime_server() {
-	script_sync "${1}"
         ossh ${1} "rm -rf ${NETSHORTNAME}-data/ && mkdir -p ${NETSHORTNAME}-data/logs/ && mkdir ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/ && touch ${NETSHORTNAME}-data/logs/unreal.log && touch ${NETSHORTNAME}-data/local.conf"
         cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} "bunzip2 | tar -xpf - -C ./${NETSHORTNAME}-data"
+	script_sync "${1}"
 }
 push_key() {
         ossh ${1} 'if [ ! -d ~/.ssh/ ]; then mkdir ~/.ssh/; fi; chmod -R 0700 ~/.ssh/'
