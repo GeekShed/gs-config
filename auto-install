@@ -148,7 +148,7 @@ version() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-		ossh "${SERVER}" strings "${NETSHORTNAME}-ircd/src/ircd" \| grep -- -gs \| head -n 1
+		echo "${SERVER}: " `ossh "${SERVER}" strings "${NETSHORTNAME}-ircd/src/ircd" \| grep -- -gs \| head -n 1`
 	done
 }
 dump_list() {
