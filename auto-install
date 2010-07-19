@@ -83,14 +83,14 @@ push_bins() {
 	SERVER="$( echo ${1} | cut -d : -f 2)"
 	SERVERPWD="$(ossh ${SERVER} pwd)"
 	FLAGS="$( echo ${1} | cut -d : -f 5)"
-	cd /tmp/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh "${SERVER}" "nohup ${NETSHORTNAME}-data/scripts/run.sh >${NETSHORTNAME}-data/logs/build.log" "build" "${NETSHORTNAME}" "${FLAGS}"
+	cd ${OUTPUTPATH}/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh "${SERVER}" "nohup ${NETSHORTNAME}-data/scripts/run.sh >${NETSHORTNAME}-data/logs/build.log" "build" "${NETSHORTNAME}" "${FLAGS}"
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} "tar -cpf - ${NETSHORTNAME}-ircd | bzip2" > /tmp/binbackup/${SERVER}.tar.bz2
 }
 push_server() {
-	rm -rf /tmp/svn
-	mkdir -p /tmp/svn
-	cd /tmp/svn
+	rm -rf ${OUTPUTPATH}/svn
+	mkdir -p ${OUTPUTPATH}/svn
+	cd ${OUTPUTPATH}/svn
 	#svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
 	ILINE="$(grep ^I:: ${STRIPCONF})"
 	if [ "${ILINE}" = "" ] ; then
