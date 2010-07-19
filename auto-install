@@ -299,4 +299,5 @@ case "${1}" in
 	;;
 esac
 
-rm -r ${OUTPUTPATH}
+chmod a+w "${OUTPUTPATH}"
+rm -r "${OUTPUTPATH}"
