@@ -144,6 +144,13 @@ ping() {
 		ossh "${SERVER}" strings "${NETSHORTNAME}-ircd/src/ircd" \| grep -- -gs
 	done
 }
+version() {
+	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+	do
+		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+		ossh "${SERVER}" strings "${NETSHORTNAME}-ircd/src/ircd" \| grep -- -gs \| head -n 1
+	done
+}
 dump_list() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
@@ -267,6 +274,9 @@ case "${1}" in
 	;;
 	[pP][iI][Nn][Gg])
 		ping $2
+	;;
+	[vV][eE][rR][sS][iI][oO][nN])
+		version $2
 	;;
 	[dD][uU][mM][pP])
 		dump_list
