@@ -80,10 +80,15 @@ push_key() {
         cat ~/.ssh/id_rsa.pub | ossh ${1} 'cat >> ~/.ssh/authorized_keys'
 }
 push_bins() {
+	SVNPATH="${2}"
 	SERVER="$( echo ${1} | cut -d : -f 2)"
+	SERVERCLASS="$( echo ${1} | cut -d : -f 12)"
+	if [ "${SERVERCLASS}" = "" ] ; then
+		SERVERCLASS="default"
+	fi
 	SERVERPWD="$(ossh ${SERVER} pwd)"
 	FLAGS="$( echo ${1} | cut -d : -f 5)"
-	cd ${OUTPUTPATH}/svn && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh "${SERVER}" "nohup ${NETSHORTNAME}-data/scripts/run.sh >${NETSHORTNAME}-data/logs/build.log" "build" "${NETSHORTNAME}" "${FLAGS}"
+	cd ${SVNPATH}/${SERVERCLASS} && tar -cpf - ${NETSHORTNAME}-ircd | bzip2 | ossh "${SERVER}" "nohup ${NETSHORTNAME}-data/scripts/run.sh >${NETSHORTNAME}-data/logs/build.log" "build" "${NETSHORTNAME}" "${FLAGS}"
 	mkdir -p /tmp/binbackup/
 	ossh ${SERVER} "tar -cpf - ${NETSHORTNAME}-ircd | bzip2" > /tmp/binbackup/${SERVER}.tar.bz2
 }
@@ -96,14 +101,14 @@ push_server() {
 			SERVERLINE=`echo ${WORKINGSERVERS}`
 			CLASS="$(echo "${SERVERLINE}" | cut -d : -f 12)"
 			fetch_source "${OUTPUTPATH}/svn" "${CLASS}"
-			push_bins "${SERVERLINE}" "${OUTPUTPATH}/svn/${CLASS}"
+			push_bins "${SERVERLINE}" "${OUTPUTPATH}/svn"
 		done
 	else
 		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ^S:${1}`
 		SERVERLINE=`echo ${WORKINGSERVERS}`
 		CLASS="$(echo "${SERVERLINE}" | cut -d : -f 12)"
 		fetch_source "${OUTPUTPATH}/svn" "${CLASS}"
-		push_bins "${SERVERLINE}" "${OUTPUTPATH}/svn/${CLASS}"
+		push_bins "${SERVERLINE}" "${OUTPUTPATH}/svn"
 	fi
 }
 
