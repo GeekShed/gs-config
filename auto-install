@@ -119,12 +119,12 @@ fetch_source() {
 	else
 		CLASSNAME="${2}"
 	fi
-	mkdir -p "${1}/${2}"
-	cd "${1}/${2}"
-	if [ "${2}" = "default" ] ; then
+	mkdir -p "${SRCDIR}/${CLASSNAME}"
+	cd "${SRCDIR}/${CLASSNAME}"
+	if [ "${CLASSNAME}" = "default" ] ; then
 		ILINE="$(grep ^I:: ${STRIPCONF})"
 	else
-		ILINE="$(grep ^I:${2}: ${STRIPCONF})"
+		ILINE="$(grep ^I:${CLASSNAME}: ${STRIPCONF})"
 	fi
 
 	if [ "${ILINE}" = "" ] ; then
