@@ -89,28 +89,43 @@ push_bins() {
 }
 push_server() {
 	rm -rf ${OUTPUTPATH}/svn
-	mkdir -p ${OUTPUTPATH}/svn
-	cd ${OUTPUTPATH}/svn
-	#svn checkout http://wr-ircd.googlecode.com/svn/trunk/ wr-ircd
-	ILINE="$(grep ^I:: ${STRIPCONF})"
+
+	if [ "${1}" = "" ] ; then
+		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
+		do
+			SERVERLINE=`echo ${WORKINGSERVERS}`
+			CLASS="$(echo "${SERVERLINE}" | cut -d : -f 12)"
+			fetch_source "${OUTPUTPATH}/svn" "${CLASS}"
+			push_bins "${SERVERLINE}" "${OUTPUTPATH}/svn/${CLASS}"
+		done
+	else
+		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ^S:${1}`
+		SERVERLINE=`echo ${WORKINGSERVERS}`
+		CLASS="$(echo "${SERVERLINE}" | cut -d : -f 12)"
+		fetch_source "${OUTPUTPATH}/svn" "${CLASS}"
+		push_bins "${SERVERLINE}" "${OUTPUTPATH}/svn/${CLASS}"
+	fi
+}
+
+fetch_source() {
+	SRCDIR="${1}"
+	CLASSNAME="${2}"
+	mkdir -p "${1}/${2}"
+	cd "${1}/${2}"
+	if [ "${2}" = "default" ] ; then
+		ILINE="$(grep ^I:: ${STRIPCONF})"
+	else
+		ILINE="$(grep ^I:${2}: ${STRIPCONF})"
+	fi
+
 	if [ "${ILINE}" = "" ] ; then
 		URL="http://gs-ircd.googlecode.com/svn/branches/1.0-STABLE"
 	else
 		URL="$(echo "${ILINE}" | head -n 1 | cut -d : -f 4-200)"
 	fi
-	svn checkout "${URL}" ${NETSHORTNAME}-ircd
-	if [ "${1}" = "" ] ; then
-		for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
-		do
-			SERVERLINE=`echo ${WORKINGSERVERS}`
-			push_bins ${SERVERLINE}
-		done
-	else
-		WORKINGSERVERS=`grep ^S ${STRIPCONF} | grep ^S:${1}`
-		SERVERLINE=`echo ${WORKINGSERVERS}`
-		push_bins ${SERVERLINE}
-	fi
+	svn checkout "${URL}" "${NETSHORTNAME}-ircd"
 }
+
 backup_module() {
 	ossh ${1} tar -cpf - ${2} >${BACKUPPATH}/${1}/${2}.tar 2>/dev/null
 }
