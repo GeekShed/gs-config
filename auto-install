@@ -109,7 +109,11 @@ push_server() {
 
 fetch_source() {
 	SRCDIR="${1}"
-	CLASSNAME="${2}"
+	if [ "${2}" = "" ] ; then
+		CLASSNAME="default"
+	else
+		CLASSNAME="${2}"
+	fi
 	mkdir -p "${1}/${2}"
 	cd "${1}/${2}"
 	if [ "${2}" = "default" ] ; then
