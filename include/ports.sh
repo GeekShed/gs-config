@@ -77,11 +77,12 @@ ports_gen ()
 			;;
 		esac
 		if [ "${SCTPENABLED}" = "yes" -a "${SCTPPORT}" = "yes" ] ; then
-			ports_block ANY "${PORT}" sctp "${POSTFIX}"
+			ports_block ANY "${PORT}" sctp "${POSTFIX}" >>${PORTSFILE}
+
 		fi
 		for LISTENIP in ${LISTENIPS}
 		do
-			ports_block ${LISTENIP} "${PORT}" "${POSTFIX}"
+			ports_block ${LISTENIP} "${PORT}" "${POSTFIX}" >>${PORTSFILE}
 		done
 	done
 
