@@ -53,7 +53,7 @@ ports_gen ()
 			;;
 		esac
 		case "${OPTIONS}" in
-			*s*)
+			*l*)
 				POSTFIX="${POSTFIX} ssl"
 			;;
 		esac
