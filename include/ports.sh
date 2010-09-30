@@ -30,83 +30,80 @@ ports_gen ()
 {
 	PORTSFILE=${CONFPATH}/ports.conf
 	echo "    - starting ${PORTSFILE}"
+	SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
+
+	case "${SOPTIONS}" in
+		*o*)
+			SSLONLY="yes"
+		;;
+		*t*)
+			SCTPENABLED="yes"
+		;;
+	esac
+
 	for PORTS in $(grep ^P: ${STRIPCONF})
 	do
-		unset SCTPPORT
 		PORT="`echo ${PORTS} | cut -f 2 -d :`"
 		OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
+		POSTFIX=""
+		LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
 		case "${OPTIONS}" in
 			*t*)
-				SCTPPORT=yes
+				SCTPPORT="yes"
 			;;
 		esac
-		case "${OPTIONS}" in
-			*l*)
-				USEPORTS=yes
-			;;
-			*s*)
-				USEPORTS=yes
-			;;
-			*t*)
-				USEPORTS=yes
-			;;
-			*)
-				unset USEPORTS
-			;;
-		esac
-
-		unset SCTPENABLED
-		unset SSLONLY
-		SOPTIONS="$(echo ${WORKINGSERVER} | cut -f 5 -d :)"
-		case "${SOPTIONS}" in
-			*o*)
-				SSLONLY="yes"
-			;;
-			*t*)
-				SCTPENABLED="yes"
-			;;
-			*)
-				unset SSLONLY
-			;;
-		esac
-		if [ "${SCTPPORT}" = "yes" ] ; then
-			LISTENIPS='ANY'
-		else
-			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
+		if [ "${SCTPENABLED}" = "yes" -a "${SCTPPORT}" = "yes" ] ; then
+			ports_block ANY "${PORT}" sctp seqpacket "${POSTFIX}"
 		fi
 		for LISTENIP in ${LISTENIPS}
 		do
-			if [ "${SSLONLY}" = "" -o "${USEPORTS}" != "" ] ; then
-				if [ "${SCTPPORT}" = "yes" ] ; then
-					if [ "${SCTPENABLED}" != "yes" ] ; then
-						continue
-					fi
-				fi
-				if [ "${LISTENIP}" = "ANY" ] ; then
-					printf "listen *:${PORT} {\n" >> ${PORTSFILE}
-				else
-					if [ "$(echo "${LISTENIP}"| grep -c ^\\\[)" = "0" ] ; then
-						echo "listen ${LISTENIP}:${PORT} {" >> ${PORTSFILE}
-					else
-						echo "listen ${LISTENIP}:${PORT} {" | tr '_' ':' >> ${PORTSFILE}
-					fi
-				fi
-				if [ "${OPTIONS}" != "" ] ; then
-					echo "    options {" >> ${PORTSFILE}
-					case ${OPTIONS} in *c*) echo "        clientsonly;" >> ${PORTSFILE} ;;	esac
-					case ${OPTIONS} in *s*) echo "        serversonly;" >> ${PORTSFILE} ;;	esac
-					case ${OPTIONS} in *l*) echo "        ssl;" >> ${PORTSFILE} ;;		esac
-					case ${OPTIONS} in *t*) echo "        sctp;" >> ${PORTSFILE} ;;		esac
-					case ${OPTIONS} in *q*) echo "        seqpacket;" >> ${PORTSFILE} ;;	esac
-					echo "    };" >> ${PORTSFILE}
-				fi
-				echo "};" >> ${PORTSFILE}
-			fi
 		done
-
 	done
-	SCTPPORT="no"
-	SCTPENABLED="no"
 
 	echo "    - ending ${PORTSFILE}"
+}
+
+ports_block()
+{
+	CIP="${1}"
+	shift
+	CPORT="${1}"
+	shift
+
+	if [ "${CIP}" = "ANY" ] ; then
+		IP="*"
+	else
+		IP="${CIP}"
+	fi
+
+	PORT="${CPORT}"
+
+	if [ "${1}" = "" ] ; then
+		echo "listen ${IP}:${PORT};"
+	else
+		echo "listen ${IP}:${PORT} {"
+		echo "    options {"
+		for VAR in $*
+		do
+			case "${VAR}" in
+				sctp)
+					echo "		sctp;"
+				;;
+				seqpacket)
+					echo "		seqpacket;"
+				;;
+				ssl)
+					echo "		ssl;"
+				;;
+				serversonly)
+					echo "		serversonly;"
+				;;
+				clientsonly)
+					echo "		clientsonly;"
+				;;
+			esac
+		done
+		echo "    };"
+		echo "};"
+	fi
 }
