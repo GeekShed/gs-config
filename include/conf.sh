@@ -48,7 +48,6 @@ conf_init ()
         NETWORK=$(grep ^N ${CONFIG} | cut -d : -f 2) ; export NETWORK
         NETSHORTNAME=$(grep ^N ${CONFIG} | cut -d : -f 6) ; export NETSHORTNAME
         OUTPUTPATH=/tmp/${NETSHORTNAME}-config/$(rand)  ; export OUTPUTPATH
-	echo ${NETSHORTNAME}
         rm -rf ${OUTPUTPATH}
         mkdir -p ${OUTPUTPATH}
         NAME=${CONFIG} ; export NAME
