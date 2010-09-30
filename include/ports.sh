@@ -52,8 +52,32 @@ ports_gen ()
 				SCTPPORT="yes"
 			;;
 		esac
+		case "${OPTIONS}" in
+			*s*)
+				POSTFIX="${POSTFIX} ssl"
+			;;
+		esac
+		case "${OPTIONS}" in
+			*q*)
+				POSTFIX="${POSTFIX} seqpacket"
+			;;
+		esac
+		case "${OPTIONS}" in
+			*c*)
+				POSTFIX="${POSTFIX} clientsonly"
+			;;
+		esac
+		case "${OPTIONS}" in
+			*s*)
+				case "${POSTFIX}" in
+					*)
+						POSTFIX="${POSTFIX} serversonly"
+					;;
+				esac
+			;;
+		esac
 		if [ "${SCTPENABLED}" = "yes" -a "${SCTPPORT}" = "yes" ] ; then
-			ports_block ANY "${PORT}" sctp seqpacket "${POSTFIX}"
+			ports_block ANY "${PORT}" sctp "${POSTFIX}"
 		fi
 		for LISTENIP in ${LISTENIPS}
 		do
