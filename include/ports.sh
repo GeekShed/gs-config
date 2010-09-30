@@ -57,7 +57,7 @@ ports_gen ()
 		fi
 		for LISTENIP in ${LISTENIPS}
 		do
-			ports_block LISTENIP "${PORT}" "${POSTFIX}"
+			ports_block ${LISTENIP} "${PORT}" "${POSTFIX}"
 		done
 	done
 
