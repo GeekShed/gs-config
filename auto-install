@@ -133,6 +133,15 @@ fetch_source() {
 		URL="$(echo "${ILINE}" | head -n 1 | cut -d : -f 4-200)"
 	fi
 	svn checkout "${URL}" "${NETSHORTNAME}-ircd"
+	ERRCODE="$?"
+	if [ "${ERRCODE}" != "0" ] ; then
+		mkdir -p "${NETSHORTNAME}-ircd"
+		if [ -f "${WORKDIR}/cache/${CLASSNAME}.tar" ] ; then
+			tar -xvpf "${WORKDIR}/cache/${CLASSNAME}.tar" -C "${NETSHORTNAME}-ircd"
+		else
+			exit
+		fi
+	fi
 }
 
 backup_module() {
