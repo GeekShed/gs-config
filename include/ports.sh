@@ -99,7 +99,14 @@ ports_block()
 	if [ "${CIP}" = "ANY" ] ; then
 		IP="*"
 	else
-		IP="${CIP}"
+		case "${CIP}" in
+			[*])
+				IP="$(echo "${CIP}" | cut -d [ -f 2 | cut -d ] -f 1 | sed s/_/:/g)"
+			;;
+			*)
+				IP="${CIP}"
+			;;
+		esac
 	fi
 
 	PORT="${CPORT}"
