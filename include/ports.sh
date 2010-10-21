@@ -101,7 +101,7 @@ ports_block()
 	else
 		case "${CIP}" in
 			[*])
-				IP="$(echo "${CIP}" | cut -d [ -f 2 | cut -d ] -f 1 | sed s/_/:/g)"
+				IP="$(echo "${CIP}" | sed s/_/:/g)"
 			;;
 			*)
 				IP="${CIP}"
