@@ -27,7 +27,7 @@ fi
 
 block="${block}};\n"
 
-echo -e $block >> conf/geekshed/global/spamfilter-operscript.conf
+echo -e "$block" >> conf/geekshed/global/spamfilter-operscript.conf
 
 ./push-spamfilter
 ./auto-install rehash

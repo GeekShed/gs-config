@@ -35,6 +35,8 @@ build_main() {
 	case "${FLAGS}" in *z*) CONFPARAMS="${CONFPARAMS} --enable-ziplinks" ;; esac
 	case "${FLAGS}" in *v*) CONFPARAMS="${CONFPARAMS} --enable-inet6" ;; esac
 	case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
+	case "${FLAGS}" in *2*) CONFPARAMS="${CONFPARAMS} --with-fd-setsize=2048" ;; esac
+	case "${FLAGS}" in *4*) CONFPARAMS="${CONFPARAMS} --with-fd-setsize=4096" ;; esac
 
 	cd ${NETSHORTNAME}-ircd
 	./configure ${CONFPARAMS} 

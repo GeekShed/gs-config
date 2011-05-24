@@ -1,3 +1,3 @@
 #!/bin/sh
 
-ssh odyssey.geekshed.net -l geekshedbnc
+ssh 64.85.162.206 -l geekshedbnc

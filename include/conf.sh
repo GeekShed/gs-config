@@ -76,6 +76,7 @@ ossh() {
 			local NOSSH=1
 		;;
 	esac
+	echo "Connecting to ${SSHIP}:${PORT} with ${USERNAME}"
 	if [ "${NOSSH}" != "1" ] ; then
 		if [ "${WRAPPER}" = "" ] ; then
 			ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
