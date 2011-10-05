@@ -37,9 +37,11 @@ build_main() {
 	case "${FLAGS}" in *s*) CONFPARAMS="${CONFPARAMS} --enable-ssl" ;; esac
 	case "${FLAGS}" in *2*) CONFPARAMS="${CONFPARAMS} --with-fd-setsize=2048" ;; esac
 	case "${FLAGS}" in *4*) CONFPARAMS="${CONFPARAMS} --with-fd-setsize=4096" ;; esac
+	case "${FLAGS}" in *8*) CONFPARAMS="${CONFPARAMS} --with-fd-setsize=8192" ;; esac
 
 	cd ${NETSHORTNAME}-ircd
 	./configure ${CONFPARAMS} 
+
 	case "${FLAGS}" in *d*) echo "#define DEBUGMODE" >>"include/config.h";; esac
 	case "${FLAGS}" in *d*) echo "#define DEBUG" >>"include/config.h";; esac
 

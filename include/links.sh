@@ -35,7 +35,12 @@ links_gen ()
 	DEFSCTPSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 9)"
 	DEFSCTPSSLSERVERPORT="$(grep ^N ${STRIPCONF} | cut -d : -f 10)"
 	MYREGION=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME} | cut -d : -f 8`
-	BINDIP=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
+	# p flag means take the 2nd IP as the bind IP for links
+	if [ `echo ${SERVEROPTIONS} | grep -c 'p'` -eq 1 ]; then
+		BINDIP=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME} | cut -d : -f 3 | cut -d - -f 2`
+	else
+		BINDIP=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME} | cut -d : -f 3 | cut -d - -f 1`
+	fi
 	echo "ulines {" >> ${LINKFILE}
 	for SERVICESSERVER in `grep ^V ${STRIPCONF}`
 	do
@@ -46,7 +51,7 @@ links_gen ()
 	IAMTHEROOTHUB=0
 	if [ "`grep ^H:0 ${STRIPCONF} | cut -d : -f 4`" = "${SERVERNAME}" ]; then
 		IAMTHEROOTHUB=1
-	fi	
+	fi
 	for REMOTESERVER in `grep ^S ${STRIPCONF} | grep -v ^S:${SERVERNAME}`
 	do
 		LINKNAME=`echo ${REMOTESERVER} | cut -f 2 -d :`

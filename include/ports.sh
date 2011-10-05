@@ -39,6 +39,9 @@ ports_gen ()
 		*t*)
 			SCTPENABLED="yes"
 		;;
+		*p*)
+			PRIVATEIP="yes"
+		;;
 	esac
 
 	for PORTS in $(grep ^P: ${STRIPCONF})
@@ -46,7 +49,13 @@ ports_gen ()
 		PORT="`echo ${PORTS} | cut -f 2 -d :`"
 		OPTIONS="`echo ${PORTS} | cut -f 3 -d :`"
 		POSTFIX=""
-		LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
+		# If p set, don't listen on first IP
+		if [ "${PRIVATEIP}" = "yes" ] ; then
+			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | cut -f 2- -d - | sed s/-/\ /g)"
+		else
+			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
+		fi
+
 		case "${OPTIONS}" in
 			*t*)
 				SCTPPORT="yes"

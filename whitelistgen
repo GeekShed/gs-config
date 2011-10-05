@@ -1,0 +1,21 @@
+#!/bin/sh
+
+IFS="
+"
+for WORKINGSERVER in $(grep ^S: conf/network.conf)
+do
+	SERVER="$(echo "${WORKINGSERVER}" | cut -d : -f 2)"
+	IPLIST="$(echo "${WORKINGSERVER}" | cut -d : -f 3)"
+	IFS="-"
+	for ip in ${IPLIST}
+	do
+		case "${ip}" in
+			\[*)
+			;;
+			*)
+				echo "	# ${SERVER}"
+				echo "	mask = \"*!*@${ip}\";"
+			;;
+		esac
+	done
+done
