@@ -1,8 +1,0 @@
-Added 2 and 4 flags to raise the fd limit. Use with caution!!
---This line, and those below, will be ignored--
-
-M    include/conf.sh
-M    scripts/ircds/gs-ircd/build.sh
-M    bnc-od
-M    auto-install
-M    add-to-spamfilter

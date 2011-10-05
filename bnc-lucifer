@@ -1,3 +1,0 @@
-#!/bin/sh
-
-ssh 50.57.137.208 -l geekshedbnc
