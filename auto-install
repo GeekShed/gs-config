@@ -121,12 +121,14 @@ fetch_source() {
 	fi
 	mkdir -p "${SRCDIR}/${CLASSNAME}"
 	cd "${SRCDIR}/${CLASSNAME}"
+	CLASSPREFIX="^I:${CLASSNAME}"
+	echo "${CLASSPREFIX}"
+
 	if [ "${CLASSNAME}" = "default" ] ; then
 		ILINE="$(grep ^I:: ${STRIPCONF})"
 	else
-		ILINE="$(grep ^I:${CLASSNAME}: ${STRIPCONF})"
+		ILINE="$(grep ${CLASSPREFIX} ${STRIPCONF})"
 	fi
-
 	if [ "${ILINE}" = "" ] ; then
 		REPOTYPE="svn"
 		BRANCH=""
@@ -135,14 +137,18 @@ fetch_source() {
 		REPOTYPE="$(echo "${ILINE}" | head -n 1 | cut -d : -f 3 | cut -d \! -f 1)"
 		BRANCH="$(echo "${ILINE}" | head -n 1 | cut -d : -f 3 | cut -d \! -f 2)"
 		URL="$(echo "${ILINE}" | head -n 1 | cut -d : -f 4-200)"
+		echo "${REPOTYPE}"
+		echo "${BRANCH}"
+		echo "${URL}"
+		read -p "Hit enter to continue" blah
 	fi
 	case "${REPOTYPE}" in
 		svn)
+			svn checkout "${URL}" "${NETSHORTNAME}-ircd"
 		;;
 		git)
 		;;
 	esac
-	svn checkout "${URL}" "${NETSHORTNAME}-ircd"
 	ERRCODE="$?"
 	if [ "${ERRCODE}" != "0" ] ; then
 		mkdir -p "${NETSHORTNAME}-ircd"
