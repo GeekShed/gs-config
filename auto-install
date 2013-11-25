@@ -128,10 +128,20 @@ fetch_source() {
 	fi
 
 	if [ "${ILINE}" = "" ] ; then
+		REPOTYPE="svn"
+		BRANCH=""
 		URL="http://gs-ircd.googlecode.com/svn/branches/1.0-STABLE"
 	else
+		REPOTYPE="$(echo "${ILINE}" | head -n 1 | cut -d : -f 3 | cut -d \! -f 1)"
+		BRANCH="$(echo "${ILINE}" | head -n 1 | cut -d : -f 3 | cut -d \! -f 2)"
 		URL="$(echo "${ILINE}" | head -n 1 | cut -d : -f 4-200)"
 	fi
+	case "${REPOTYPE}" in
+		svn)
+		;;
+		git)
+		;;
+	esac
 	svn checkout "${URL}" "${NETSHORTNAME}-ircd"
 	ERRCODE="$?"
 	if [ "${ERRCODE}" != "0" ] ; then
