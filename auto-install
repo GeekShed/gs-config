@@ -140,13 +140,16 @@ fetch_source() {
 		echo "${REPOTYPE}"
 		echo "${BRANCH}"
 		echo "${URL}"
-		read -p "Hit enter to continue" blah
+	fi
+	if [ "${BRANCH}" = "" ] ; then
+		BRANCH="master"
 	fi
 	case "${REPOTYPE}" in
 		svn)
 			svn checkout "${URL}" "${NETSHORTNAME}-ircd"
 		;;
 		git)
+			git clone --progress "${URL}" "${NETSHORTNAME}-ircd" -b "${BRANCH}" --depth 1 --single-branch
 		;;
 	esac
 	ERRCODE="$?"
