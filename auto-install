@@ -74,6 +74,30 @@ prime_server() {
         ossh ${1} "rm -rf ${NETSHORTNAME}-data/ && mkdir -p ${NETSHORTNAME}-data/logs/ && mkdir ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/ && touch ${NETSHORTNAME}-data/logs/unreal.log && touch ${NETSHORTNAME}-data/local.conf"
         cd ${WORKDIR}/certs/ && tar -cpvf - *.pem | bzip2 | ossh ${1} "bunzip2 | tar -xpf - -C ./${NETSHORTNAME}-data"
 	script_sync "${1}"
+	push_cron "${1}"
+}
+push_certs() {
+	OLDPWD="$(pwd)"
+	cd "${WORKDIR}/certs"
+	if [ "${1}" = "" ] ; then
+		for WORKINGSERVERS in `grep ^S ${STRIPCONF} | awk '{a[i++]=$0} END {for (j=i-1; j>=0;) print a[j--] }'`
+		do
+			SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
+			echo ${SERVER}
+			tar -cpvf - *.pem | bzip2 | ossh ${SERVER} "bunzip2 | tar -xpf - -C ./${NETSHORTNAME}-data"
+		done
+	else
+		echo "${1}"
+		tar -cpvf - *.pem | bzip2 | ossh ${SERVER} "bunzip2 | tar -xpf - -C ./${NETSHORTNAME}-data"
+	fi
+	cd "${OLDPWD}"
+}
+push_cron() {
+	status=`ossh ${1} 'crontab -l | grep -c "@reboot /home/wamphyre/gs-ircd/unreal start"' | grep -v "Connecting to"`
+
+	if [ "$status" = 0 ] ; then
+		ossh ${1} "(crontab -l ; echo '@reboot /home/wamphyre/gs-ircd/unreal start') | crontab -"
+	fi
 }
 push_key() {
         ossh ${1} 'if [ ! -d ~/.ssh/ ]; then mkdir ~/.ssh/; fi; chmod -R 0700 ~/.ssh/'
@@ -192,9 +216,9 @@ ping() {
 	for WORKINGSERVERS in `grep ^S ${STRIPCONF}`
 	do
 		SERVER=`echo ${WORKINGSERVERS} | cut -d : -f 2`
-#		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} "grep MAXCONNECTIONS ${NETSHORTNAME}-ircd/config.log | head -n 1"` "
-#		ossh "${SERVER}" strings "${NETSHORTNAME}-ircd/src/ircd" \| grep -- -gs
-	ossh "${SERVER}" grep therock /etc/passwd
+		echo "${SERVER}: `ossh ${SERVER} uname -sr 2>/dev/null` `ossh ${SERVER} openssl version 2>/dev/null` `ossh ${SERVER} gcc --version 2>/dev/null | head -n 1 ` `ossh ${SERVER} "grep MAXCONNECTIONS ${NETSHORTNAME}-ircd/config.log | head -n 1"` "
+		ossh "${SERVER}" strings "${NETSHORTNAME}-ircd/src/ircd" \| grep -- -gs
+#	ossh "${SERVER}" grep therock /etc/passwd
 	done
 }
 version() {
@@ -303,6 +327,7 @@ usage() {
 	echo "    ${COMMAND} rehash"
         echo "    ${COMMAND} prime"
         echo "    ${COMMAND} pushkey"
+        echo "    ${COMMAND} pushcerts"
         echo "    ${COMMAND} makemodules"
 }
 
@@ -315,6 +340,9 @@ case "${1}" in
 	;;
         [pP][uU][sS][hH][kK][eE][yY])
                 push_key $2
+        ;;
+        [pP][uU][sS][hH][cC][eE][rR][tT][sS])
+                push_certs $2
         ;;
 	[aA][dD][dD])
 		add_server $2
@@ -336,6 +364,9 @@ case "${1}" in
 	;;
         [pP][rR][iI][mM][eE])
                 prime_server $2
+        ;;
+        [cC][rR][oO][nN])
+                push_cron $2
         ;;
         [mM][aA][kK][eE][mM][oO][dD][uU][lL][eE][sS])
                 make_modules $2

@@ -3,7 +3,7 @@
 # Copyright (c) 2009 GeekShed Ltd.
 # All rights reserved.
 #
-# $Id$
+# $Id: server.sh 234 2010-03-24 19:59:23Z phil@pchowtos.co.uk $
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -24,48 +24,46 @@
 # HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-# SUCH DAMAGE.
+# SUCH DAMAGE
+altclass_gen ()
+{
+	SERVERFILE=${CONFPATH}/alt_classes.conf
+	echo "    - starting ${SERVERFILE}"
+	SLINE=`grep ^S ${STRIPCONF} | grep ^S:${SERVERNAME}`
+	OPTIONS=`echo $SLINE | cut -d : -f 5`
 
-for script in include/*
-do
-	. ${script}
-done
+	case "${SOPTIONS}" in
+		*2*)
+			NUMCLIENTS=2048
+		;;
+		*4*)
+			NUMCLIENTS=4096
+		;;
+		*8*)
+			NUMCLIENTS=8192
+		;;
+	esac
 
-conf_init
+	echo -n "" >${SERVERFILE}
 
-main () {
-	# run through scripts
-	if [ "${1}" != "" ] ; then
-		SERVERLIST="$(grep ^S "${STRIPCONF}" | grep ^S:${1})"
-	else
-		SERVERLIST="$(grep ^S "${STRIPCONF}")"
+	if [ "${NUMCLIENTS}" != "" ] ; then
+		echo "class bigclients {" >>${SERVERFILE}
+		echo -e "\tpingfreq 90;" >>${SERVERFILE}
+		echo -e "\tmaxclients ${NUMCLIENTS};" >>${SERVERFILE}
+		echo -e "\tsendq 256000;" >>${SERVERFILE}
+		echo -e "\trecvq 8000;" >>${SERVERFILE}
+		echo "};" >>${SERVERFILE}
+
+		echo "" >>${SERVERFILE}
+
+		echo "allow {" >>${SERVERFILE}
+		echo -e "\tip *@*;" >>${SERVERFILE}
+		echo -e "\thostname *@*;" >>${SERVERFILE}
+		echo -e "\tclass bigclients;" >>${SERVERFILE}
+		echo -e "\tredirect-server \"irc.geekshed.net\";" >>${SERVERFILE}
+		echo "};" >>${SERVERFILE}
 	fi
 
-	for WORKINGSERVER in ${SERVERLIST}
-	do
-		export WORKINGSERVER
-		SERVERNAME=`echo ${WORKINGSERVER} | cut -f 2 -d :` ; export SERVERNAME
-		REGION=`echo ${WORKINGSERVER} | cut -f 9 -d :` ; export REGION
-		echo "${WORKINGSERVER}"
-		echo "${SERVERNAME}"
-		CONFPATH=${OUTPUTPATH}/conf/${SERVERNAME} ; export CONFPATH
-		mkdir -p ${CONFPATH}
-		for args in server links ports opers altclasses spamfilter
-		do
-				case ${args} in
-					server) server_gen ;;
-					links) links_gen ;;
-					ports) ports_gen ;;
-					opers) opers_gen ;;
-					spamfilter) touch ${CONFPATH}/autospamfilter.conf ;;
-					altclasses) altclass_gen ;;
-				esac
-		done
-		cp -Rp ${SCRIPTROOT}/conf/${NETWORK}/global/* ${CONFPATH}
-		cd ${CONFPATH} 
-		tar -cvf - * | bzip2 | ossh ${SERVERNAME} "bunzip2 | tar -xf - -C ${NETSHORTNAME}-data/${NETSHORTNAME}-ircd/"
-	done
+	echo "    - ending ${SERVERFILE}"
 }
 
-
-main $*

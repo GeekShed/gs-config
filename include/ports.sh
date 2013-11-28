@@ -34,13 +34,13 @@ ports_gen ()
 
 	case "${SOPTIONS}" in
 		*o*)
-			SSLONLY="yes"
+			local SSLONLY="yes"
 		;;
 		*t*)
-			SCTPENABLED="yes"
+			local SCTPENABLED="yes"
 		;;
 		*p*)
-			PRIVATEIP="yes"
+			local PRIVATEIP="yes"
 		;;
 	esac
 
@@ -51,6 +51,7 @@ ports_gen ()
 		POSTFIX=""
 		# If p set, don't listen on first IP
 		if [ "${PRIVATEIP}" = "yes" ] ; then
+			echo "limiting ips on ${WORKINGSERVER}"
 			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | cut -f 2- -d - | sed s/-/\ /g)"
 		else
 			LISTENIPS="$(echo "${WORKINGSERVER}" | cut -f 3 -d : | sed s/-/\ /g)"
@@ -58,29 +59,29 @@ ports_gen ()
 
 		case "${OPTIONS}" in
 			*t*)
-				SCTPPORT="yes"
+				local SCTPPORT="yes"
 			;;
 		esac
 		case "${OPTIONS}" in
 			*l*)
-				POSTFIX="${POSTFIX} ssl"
+				local POSTFIX="${POSTFIX} ssl"
 			;;
 		esac
 		case "${OPTIONS}" in
 			*q*)
-				POSTFIX="${POSTFIX} seqpacket"
+				local POSTFIX="${POSTFIX} seqpacket"
 			;;
 		esac
 		case "${OPTIONS}" in
 			*c*)
-				POSTFIX="${POSTFIX} clientsonly"
+				local POSTFIX="${POSTFIX} clientsonly"
 			;;
 		esac
 		case "${OPTIONS}" in
 			*s*)
 				case "${POSTFIX}" in
 					*)
-						POSTFIX="${POSTFIX} serversonly"
+						local POSTFIX="${POSTFIX} serversonly"
 					;;
 				esac
 			;;

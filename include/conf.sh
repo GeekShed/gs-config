@@ -66,6 +66,11 @@ ossh() {
                 local SSHIP=`echo "${SERVER}" | cut -d : -f 3 | sed s/-/\ /g | awk ' { print $1; }'`
         fi
         local USERNAME=`echo "${SERVER}" | cut -d : -f 9`
+
+	if [ "${USERNAME}" = "" ] ; then
+		USERNAME=$USER
+	fi
+
         local PORT=`echo "${SERVER}" | cut -d : -f 10 `
         if [ "${PORT}" = "" ] ; then
                 local PORT=22
@@ -76,7 +81,6 @@ ossh() {
 			local NOSSH=1
 		;;
 	esac
-	echo "Connecting to ${SSHIP}:${PORT} with ${USERNAME}"
 	if [ "${NOSSH}" != "1" ] ; then
 		if [ "${WRAPPER}" = "" ] ; then
 			ssh -p ${PORT} ${USERNAME}@${SSHIP} sh -c \"$*\"
