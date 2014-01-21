@@ -365,6 +365,9 @@ case "${1}" in
         [pP][rR][iI][mM][eE])
                 prime_server $2
         ;;
+        [iI][nN][sS][tT][aA][lL][lL])
+                prime_server $2
+        ;;
         [cC][rR][oO][nN])
                 push_cron $2
         ;;
