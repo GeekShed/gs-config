@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ssh sentinel.shellfusion.net -l geekshed php ./bnc-rm ${1}
