@@ -39,9 +39,9 @@ build_main() {
 		[fF][rR][eE][eE][bB][sS][dD])
 			MAJOR="$(echo ${RELEASE} | cut -d . -f 1)"
 			echo "MAJOR=${MAJOR}"
-
 			if [ "${MAJOR}" -ge 10 ] ; then
 				CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
+
 			else
 				CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 			fi
@@ -59,7 +59,15 @@ build_main() {
 
 	cd ${NETSHORTNAME}-ircd
 	./configure ${CONFPARAMS} 
-
+	case "${OS}" in
+		[fF][rR][eE][eE][bB][sS][dD])
+			MAJOR="$(echo ${RELEASE} | cut -d . -f 1)"
+			echo "MAJOR=${MAJOR}"
+			if [ "${MAJOR}" -ge 10 ] ; then
+				sed -i .bak "s@-lcrypt@-lcrypt -lintl@g" "${SERVERPWD}/${NETSHORTNAME}-ircd/Makefile"
+			fi
+		;;
+	esac
 	case "${FLAGS}" in *d*) echo "#define DEBUGMODE" >>"include/config.h";; esac
 	case "${FLAGS}" in *d*) echo "#define DEBUG" >>"include/config.h";; esac
 
