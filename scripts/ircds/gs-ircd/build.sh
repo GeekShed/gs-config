@@ -41,7 +41,7 @@ build_main() {
 			echo "MAJOR=${MAJOR}"
 
 			if [ "${MAJOR}" -ge 10 ] ; then
-				CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking CC=$(echo /usr/local/bin/gcc4*)"
+				CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 			else
 				CONFPARAMS="--enable-hub --enable-prefixaq --with-showlistmodes --with-listen=5 --with-dpath=${SERVERPWD}/${NETSHORTNAME}-ircd  --with-spath=${SERVERPWD}/${NETSHORTNAME}-ircd/src/ircd --with-nick-history=2000 --with-sendq=3000000 --with-bufferpool=18 --with-hostname=127.0.0.1 --with-permissions=0600 --enable-dynamic-linking"
 			fi
